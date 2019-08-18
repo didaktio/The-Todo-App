@@ -1,0 +1,30 @@
+.datetime-btns {
+    height: 100%;
+    z-index: 100;
+
+    .clear-datetime-btn {
+        color: var(--ion-color-danger);
+        font-size: 0.6em;
+    }
+
+    .rm-time-btn {
+        font-size: 0.6em;
+    }
+}
+
+.reminders {
+    padding: 16px;
+
+    .option {
+        padding: 4px 0;
+
+        ion-checkbox {
+            float: left;
+            margin-right: 8px;
+        }
+    }
+}
+
+ion-datetime {
+    white-space: pre-wrap;
+}

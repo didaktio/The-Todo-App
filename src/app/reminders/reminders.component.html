@@ -1,0 +1,48 @@
+<ion-content padding>
+  <ion-button class="close-btn"
+              fill="clear"
+              color="danger"
+              (click)="popoverCtrl.dismiss()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+
+  <h1>Reminders</h1>
+
+
+  <ion-list *ngIf="reminders$ | async as reminders; else empty">
+
+    <span *ngIf="!reminders.length; else empty">
+      <ng-container *ngTemplateOutlet="empty"></ng-container>
+    </span>
+
+    <ion-item-sliding #reminder
+                      *ngFor="let r of reminders">
+
+      <ion-item>
+        <ion-label>
+          <h2>{{r.todo.title}}</h2>
+          <p>{{r.reminder.title}} Reminder</p>
+          <p>Will arrive: {{toDate(r.reminder.date)}}</p>
+        </ion-label>
+
+        <ion-button slot="end"
+                    fill="clear"
+                    (click)="reminder.open()">
+          <ion-icon name="ios-more"></ion-icon>
+        </ion-button>
+
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="delete(r.reminder.date)"
+                         color="danger">Delete</ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>
+
+  </ion-list>
+
+  <ng-template #empty>There are no reminders set.</ng-template>
+
+
+</ion-content>

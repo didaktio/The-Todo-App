@@ -1,0 +1,22 @@
+.item {
+    margin: 8px;
+    padding: 8px;
+    outline: 1px solid lightgrey;
+
+    .high-priority {
+        color: red;
+        font-weight: bold;
+    }
+
+    .change-made {
+        font-size: 0.8em;
+        color: var(--ion-color-medium);
+        float: right;
+    }
+
+    div {
+        & > span:first-child {
+            font-weight: bold;
+        }
+    }
+}

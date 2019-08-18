@@ -1,0 +1,114 @@
+<ion-content padding>
+
+  <ion-button class="close-btn"
+              fill="clear"
+              color="danger"
+              (click)="modalCtrl.dismiss()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+
+  <h1>Settings</h1>
+
+  <ng-container *ngIf="data$ | async as data">
+
+    <!-- General Settings -->
+    <form #form="ngForm"
+          class="general-settings-form"
+          (ngSubmit)="updateGeneral(form)">
+
+      <h5>General</h5>
+      <ion-item>
+        <ion-label position="floating">Name</ion-label>
+        <ion-input name="name"
+                   [ngModel]="data.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Email (for reminders, not login)</ion-label>
+        <ion-input name="email"
+                   [ngModel]="data.email"></ion-input>
+      </ion-item>
+
+      <div class="password">
+        <ion-button size="small"
+                    color="dark"
+                    (click)="resetPassword()">
+          Reset Password
+        </ion-button>
+        <ion-note *ngIf="resetPasswordRes">{{resetPasswordRes}}</ion-note>
+      </div>
+
+      <div class="submit-btn">
+        <ion-button *ngIf="form.dirty"
+                    type="submit">
+          Save Changes
+        </ion-button>
+        <ion-note *ngIf="updateGeneralRes">{{updateGeneralRes}}</ion-note>
+      </div>
+
+    </form>
+
+    <!-- Reminders -->
+    <h5>Reminders</h5>
+    <ion-list>
+      <ion-item>
+        <ion-label>Emails</ion-label>
+        <ion-toggle [ngModel]="data.preferences.reminders.emails"
+                    (ionChange)="updateReminderEmails($event.target.checked)"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Notifications</ion-label>
+        <ion-toggle [ngModel]="data.preferences.reminders.notifications"
+                    (ionChange)="updateReminderNots($event.target.checked)"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+
+  <!-- Theme Settings -->
+  <div class="theme">
+    <h5>Theme</h5>
+
+    <ion-button *ngIf="theme.activeTheme"
+                class="default-btn"
+                fill="clear"
+                size="small"
+                (click)="theme.useDefault()">Use Default</ion-button>
+
+    <ion-radio-group #themeSelector
+                     (ionChange)="theme.setTheme(themeSelector.value)">
+      <ion-row>
+
+        <ion-col *ngFor="let t of theme.themes | keyvalue"
+                 size="3">
+          <ion-item lines="full"
+                    [style]="sanitizeStyle('--background', t.value.background)">
+            <ion-label position="stacked">{{ t.key | titlecase }}</ion-label>
+            <ion-radio [checked]="t.key === theme.activeTheme"
+                       [value]="t.key"></ion-radio>
+          </ion-item>
+        </ion-col>
+
+      </ion-row>
+
+    </ion-radio-group>
+
+  </div>
+
+
+  <!-- Account Settings -->
+  <h5>Your Data</h5>
+  <div>
+    <ion-button (click)="exportData()">Export Data</ion-button>
+    <input #dataFileInput
+           hidden
+           type="file"
+           accept=".zip"
+           (change)="importData(dataFileInput.files)">
+    <ion-button (click)="dataFileInput.click()">Import Data</ion-button>
+  </div>
+
+  <ion-button color="danger"
+              (click)="resetApp()">Reset App</ion-button>
+
+
+</ion-content>

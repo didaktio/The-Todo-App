@@ -1,3 +1,78 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+
+  <ion-menu side="end">
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ auth.name || 'Menu'}}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+
+      <ion-menu-toggle>
+
+        <!-- <ion-item button>
+          <ion-icon slot="start"
+                    color="dark"
+                    name="list"></ion-icon>
+          <ion-label>FAQ</ion-label>
+        </ion-item> -->
+
+        <ion-item button
+                  (click)="openReminders()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="alarm"></ion-icon>
+          <ion-label>Reminders</ion-label>
+        </ion-item>
+
+        <ion-item button
+                  (click)="openTrash()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="trash"></ion-icon>
+          <ion-label>Trash</ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="auth.loggedIn"
+                  button
+                  (click)="openSettings()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="settings"></ion-icon>
+          <ion-label>Settings</ion-label>
+        </ion-item>
+
+
+        <ion-item *ngIf="auth.loggedIn"
+                  button
+                  (click)="logout()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="log-out"></ion-icon>
+          <ion-label>Logout</ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="!auth.loggedIn"
+                  button
+                  color="tertiary"
+                  (click)="auth.openSignup()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="person-add"></ion-icon>
+          <ion-label>Signup</ion-label>
+        </ion-item>
+
+      </ion-menu-toggle>
+
+    </ion-content>
+
+    <ion-footer>
+      The Todo App - Because Why Not?
+    </ion-footer>
+
+  </ion-menu>
+
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>

@@ -1,0 +1,103 @@
+<div padding>
+
+  <h2>{{item ? 'Edit' : 'Add'}} Todo Item</h2>
+  <h6 text-center>{{title.value}}</h6>
+
+  <form [formGroup]="todoForm"
+        (ngSubmit)="save(todoForm.value)">
+
+    <ion-item>
+      <ion-label position="floating">Title</ion-label>
+      <ion-input formControlName="title"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Notes</ion-label>
+      <ion-textarea formControlName="notes"></ion-textarea>
+    </ion-item>
+
+    <ion-item formGroupName="dateDue">
+      <ion-label position="floating">By When</ion-label>
+      <ion-datetime formControlName="date"
+                    [displayFormat]="withTime ? 'D MMM YYYY, H:mm a' : 'D MMM YYYY'"></ion-datetime>
+      <div class="datetime-btns"
+           slot="end">
+        <ion-button *ngIf="dateDueDate.value"
+                    class="clear-datetime-btn"
+                    fill="clear"
+                    (click)="clearDatetime(); $event.stopPropagation()">
+          Clear
+        </ion-button>
+        <ion-button *ngIf="dateDueDate.value && !withTime"
+                    class="add-time-btn"
+                    fill="clear"
+                    (click)="timePicker.open(); $event.stopPropagation()">
+          Add Time
+        </ion-button>
+        <ion-button *ngIf="withTime"
+                    class="rm-time-btn"
+                    fill="clear"
+                    (click)="removeTime(); $event.stopPropagation()">
+          Remove Time
+        </ion-button>
+      </div>
+    </ion-item>
+
+    <ion-datetime #timePicker
+                  style="display:none"
+                  (ionChange)="addTime(timePicker.value)"
+                  pickerFormat="h:mm A"></ion-datetime>
+
+    <ion-item>
+      <ion-label>High Priority</ion-label>
+      <ion-checkbox slot="end"
+                    formControlName="highPriority"></ion-checkbox>
+    </ion-item>
+
+    <ion-item *ngIf="withTime">
+      <ion-label>Send Reminder</ion-label>
+      <ion-checkbox #showRemindersCheckbox
+                    (ionChange)="sendRemindersClicked(showRemindersCheckbox)"></ion-checkbox>
+    </ion-item>
+
+    <div class="reminders"
+         [hidden]="!showReminders"
+         formGroupName="reminders">
+
+      <h5>Reminders</h5>
+      <div class="option">
+        <ion-checkbox formControlName="mins30"></ion-checkbox>
+        <span>30 Minutes</span>
+      </div>
+      <div class="option">
+        <ion-checkbox formControlName="hours1"></ion-checkbox>
+        <span>1 Hour</span>
+      </div>
+      <div class="option">
+        <ion-checkbox formControlName="days1"></ion-checkbox>
+        <span>1 Day</span>
+      </div>
+
+    </div>
+
+    <div margin
+         float-right>
+      <ion-button slot="end"
+                  fill="clear"
+                  (click)="cancel()">
+        Cancel
+      </ion-button>
+
+      <ion-button slot="end"
+                  type="submit"
+                  [disabled]="todoForm.pristine">
+        Save
+      </ion-button>
+    </div>
+
+
+
+  </form>
+
+
+</div>

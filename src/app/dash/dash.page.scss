@@ -1,0 +1,73 @@
+ion-header {
+    .add-btn {
+        display: none;
+    }
+
+    @media only screen and (min-width: 600px) {
+        display: block;
+    }
+}
+
+ion-row {
+    justify-content: center;
+}
+
+ion-badge {
+    font-size: 0.5em;
+}
+
+.done-btn {
+    z-index: 100;
+}
+
+.item-complete {
+    text-decoration: line-through;
+
+    p {
+        text-decoration: line-through;
+    }
+}
+
+.filter-checkbox {
+    padding: 4px 0 4px 16px;
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+
+    ion-checkbox {
+        margin-right: 8px;
+    }
+}
+
+.clear-filter-btn {
+    z-index: 100;
+    margin: 0;
+}
+
+.options-col {
+    align-self: unset;
+
+    @media only screen and (min-width: 600px) {
+        align-self: bottom;
+    }
+}
+
+.list-settings-col {
+    display: none;
+    @media only screen and (min-width: 600px) {
+        display: block;
+    }
+}
+
+.list-settings-toolbar {
+    --background: ghostwhite;
+    ion-item {
+        --background: transparent;
+    }
+}
+
+ion-footer {
+    @media only screen and (min-width: 600px) {
+        display: none;
+    }
+}

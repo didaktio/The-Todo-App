@@ -1,0 +1,54 @@
+{
+  "version": "1.3",
+  "name": "The Todo App",
+  "short_name": "Todo App",
+  "description": "The Todo App - Because why not?",
+  "theme_color": "#1976d2",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "assets/logo/Icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo/Icon-Small-50@2x.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo/Icon-Spotlight-40@3x.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo/Icon-72@2x.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo/Icon-76@2x.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo/Icon-60@3x.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "todo/src/assets/logo/Icon-76@3x.png",
+      "sizes": "228x228",
+      "type": "image/png"
+    },
+    {
+      "src": "todo/src/assets/logo/iTunesArtwork.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "gcm_sender_id": "103953800507"
+}

@@ -1,0 +1,58 @@
+<ion-content padding>
+
+  <ion-button float-right
+              color="medium"
+              fill="clear"
+              (click)="modalCtrl.dismiss(undefined, 'skipped')">
+    Skip
+  </ion-button>
+
+  <h2>Signup</h2>
+  <form [formGroup]="form"
+        (ngSubmit)="submit(form.value)">
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input type="email"
+                 formControlName="email"
+                 debounce="1000"></ion-input>
+      <ion-note color="danger" *ngIf="name.invalid && name.value">Please enter a valid Name</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Email <ion-note color="danger">*</ion-note>
+      </ion-label>
+      <ion-input type="email"
+                 formControlName="email"
+                 debounce="1000"></ion-input>
+      <ion-note color="danger" *ngIf="email.invalid && email.value">Please enter a valid Email</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Password <ion-note color="danger">*</ion-note>
+      </ion-label>
+      <ion-input type="password"
+                 formControlName="password"
+                 debounce="1000"></ion-input>
+      <ion-note color="danger" *ngIf="password.invalid && password.value">Please enter a valid Password</ion-note>
+    </ion-item>
+
+    <ion-item lines="none"
+              *ngIf="error">
+      {{error}}
+    </ion-item>
+
+    <div margin>
+      <ion-button float-left
+                  color="secondary"
+                  (click)="modalCtrl.dismiss(undefined, 'login')">
+        Login
+      </ion-button>
+
+      <ion-button float-right
+                  [disabled]="form.invalid"
+                  type="submit">
+        Signup
+      </ion-button>
+    </div>
+
+  </form>
+
+</ion-content>

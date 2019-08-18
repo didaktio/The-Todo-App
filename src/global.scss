@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,3 +24,102 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+ion-grid {
+    @media only screen and (min-width: 600px) {
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
+    }
+}
+
+.alert-todo-details {
+    --max-width: 33%;
+
+    &.high-priority {
+        .alert-title {
+            color: var(--ion-color-danger);
+        }
+    }
+
+    &.item-complete {
+        .alert-title {
+            color: initial;
+            text-decoration: line-through;
+        }
+    }
+
+    .alert-button-group {
+        flex-direction: row !important;
+    }
+
+    .history-btn {
+        position: absolute;
+        left: 16px;
+    }
+}
+
+.alert-signup, .alert-login {
+    &.error {
+        .alert-message {
+            color: var(--ion-color-danger);
+        }
+    }
+
+    .alert-button-group {
+        flex-direction: row !important;
+
+        .skip-btn {
+            color: var(--ion-color-medium);
+        }
+
+        .main-btn {
+            background: var(--ion-color-primary);
+            color: var(--ion-color-light);
+        }
+    }
+}
+
+.popover {
+    --min-width: 95%;
+    --max-height: 80%;
+
+    &.todo-form {
+        --max-height: 70%;
+    }
+
+    &.todo-history {
+        --max-height: 70%;
+    }
+
+    &.trash {
+        --max-height: 70%;
+    }
+
+    &.reminders {
+        --max-height: 70%;
+    }
+
+    @media only screen and (min-width: 600px) {
+        --min-width: 33%;
+        --max-height: 70%;
+    }
+}
+
+ion-label {
+    overflow: unset !important;
+}
+
+ion-footer {
+    text-align: center;
+}
+
+.title-ios {
+    text-align: left;
+    padding-left: 16px;
+}
+
+.modal {
+    --border-width: 16px;
+    --border-style: solid;
+    --border-color: floralwhite;
+}

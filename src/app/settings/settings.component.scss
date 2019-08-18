@@ -1,0 +1,31 @@
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.theme {
+    position: relative;
+
+    .default-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
+.general-settings-form {
+    ion-note {
+        padding: 8px;
+        color: var(--ion-color-danger);
+    }
+
+    .password {
+        margin: 16px 0;
+    }
+
+    .submit-btn {
+        margin: 16px;
+        text-align: right;
+    }
+}

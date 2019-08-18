@@ -1,0 +1,55 @@
+<ion-content padding>
+
+  <ion-button class="close-btn"
+              fill="clear"
+              color="danger"
+              (click)="popoverCtrl.dismiss()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+
+  <h1>Trash</h1>
+
+  <ng-container *ngIf="todos.trash$ | async as items">
+
+    <ion-button *ngIf="items.length"
+                class="clear-trash-btn"
+                fill="clear"
+                color="danger"
+                (click)="todos.clearTrash()">
+      Delete All
+    </ion-button>
+    <!-- TODO MOVE BTN -->
+
+    <span *ngIf="!items.length; else empty">
+      <ng-container *ngTemplateOutlet="empty"></ng-container>
+    </span>
+
+    <div *ngFor="let t of items; let index = i"
+         class="item">
+
+      <ion-button class="restore-btn"
+                  fill="clear"
+                  size="small"
+                  color="medium"
+                  (click)="putBack(t)">
+        Put Back
+      </ion-button>
+
+      <div><span>Title: </span>{{t.title}}</div>
+
+      <div *ngIf="t.notes"><span>Notes: </span>{{t.notes}}</div>
+
+      <div><span>Priority: </span>
+        <span [ngClass]="{'high-priority': t.highPriority}">{{ t.highPriority ? 'High' : 'Normal' }}</span>
+      </div>
+
+      <div *ngIf="t.dateDue"><span>By: </span>{{ formatDateShort(t.dateDue.date) }}</div>
+
+    </div>
+
+  </ng-container>
+
+  <ng-template #empty>There are no items to display.</ng-template>
+
+
+</ion-content>

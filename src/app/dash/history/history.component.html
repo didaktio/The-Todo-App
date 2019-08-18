@@ -1,0 +1,44 @@
+<ion-content padding>
+
+  <h6>Date Added: {{ formatDateShort(item.dateAdded) }}</h6>
+
+  <div class="select-container">
+    <ion-select interface="popover"
+                [(ngModel)]="selectedOption">
+      <ion-select-option value="all">All</ion-select-option>
+      <ion-select-option *ngFor="let item of item?.history"
+                         [value]="item">{{ formatDateShort(item.changeMade) }}</ion-select-option>
+    </ion-select>
+  </div>
+
+
+  <ng-container *ngIf="selectedOption == 'all'; else selected">
+
+    <div *ngFor="let i of item?.history">
+
+      <item [item]="i"></item>
+      
+    </div>
+
+  </ng-container>
+
+  <ng-template #selected>
+
+    <div *ngIf="selectedOption as i"
+         class="item">
+
+      <item [item]="i"></item>
+
+    </div>
+
+  </ng-template>
+
+
+  <div margin
+       float-right>
+    <ion-button (click)="popoverCtrl.dismiss()">
+      Close
+    </ion-button>
+  </div>
+
+</ion-content>

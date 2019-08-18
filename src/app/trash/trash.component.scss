@@ -1,0 +1,35 @@
+.close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.clear-trash-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.item {
+    margin: 8px;
+    padding: 8px;
+    outline: 1px solid lightgrey;
+    position: relative;
+
+    .restore-btn {
+        position: absolute;
+        right: 0;
+        top:0;
+    }
+
+    .high-priority {
+        color: red;
+        font-weight: bold;
+    }
+
+    div {
+        & > span:first-child {
+            font-weight: bold;
+        }
+    }
+}

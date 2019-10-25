@@ -1,5 +1,5 @@
 import { functions, regions, admin } from './config';
-import { TodoUser } from './models';
+import { TodoUser } from 'todo-utils';
 
 import { differenceInMinutes, format } from 'date-fns';
 

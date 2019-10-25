@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 
 import * as Color from 'color';
 import { AuthService } from './auth.service';
-import { TodoUser } from '../utils/models';
+import { TodoUser } from 'todo-utils';
 import { DbService } from './db.service';
 
 

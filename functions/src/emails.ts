@@ -1,5 +1,5 @@
 import { functions, regions, transporter } from './config';
-import { Reminder } from './models';
+import { Reminder } from 'todo-utils';
 
 
 // Triggers when a new reminder object is added to any user's 'reminders' subcollection
@@ -27,7 +27,7 @@ export const sendReminderEmail = functions.region(regions.default).firestore.doc
             <p>Hi ${user.name || user.email},<br>
             Just a little reminder that you wanted the following task completed by ${completeBy.formattedDate}:</p>
             <div style="width:fit-content;margin:24px auto;">
-                <h3>${todo.title}${todo.highPriority ? '<span style="color:red;font-size:0.7em;font-weight:normal;"> (High Priority)</span>' : ''}</h3>
+                <h3>${todo.title}${todo.highPriority ? '<span style="color:red;font-size:0.7em;font-weight:normal;padding:16px 32px;border:1px solid lightgray;"> (High Priority)</span>' : ''}</h3>
                 <p>${todo.notes}</p>
             </div>
             <span>Jump into the app to complete or edit this task.</span>

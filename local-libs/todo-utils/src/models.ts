@@ -1,5 +1,3 @@
-import { Theme } from '../services/theme.service';
-
 export interface EditTodoFormData {
     title: string;
     notes: string;
@@ -47,10 +45,19 @@ export interface TodoUser {
         };
     };
     settings: {
-        theme: Theme;
+        theme: 'light' | 'dark' | 'grey' | 'sepia';
         css: string;
     };
-    createdAt: firebase.firestore.Timestamp | Date;
+    createdAt: any;
     reminders: string[];
     deviceToken: string;
+}
+
+export interface Reminder {
+    todo: TodoItem;
+    user: TodoUser['general'];
+    completeBy:{
+        formattedDate: string;
+        minutesToExpiry: number;
+    };
 }

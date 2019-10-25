@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
+
 import { AuthService } from './auth.service';
+import { DbService, arrayAdd, arrayRemove } from './db.service';
+import { TodoItem, TodoUser } from 'todo-utils';
 
 import { map, first, switchMap } from 'rxjs/operators';
-
 import { BehaviorSubject, of, Observable } from 'rxjs';
-
-import { TodoItem, TodoUser } from '../utils/models';
-import { TODOS_MOCK } from '../utils/mocks';
-import { DbService, arrayAdd, arrayRemove } from './db.service';
 
 
 @Injectable({ providedIn: 'root' })

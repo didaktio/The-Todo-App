@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { Platform, PopoverController, ModalController } from '@ionic/angular';
 import { TrashComponent } from './trash/trash.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ThemeService } from './services/theme.service';
-import { AuthService } from './services/auth.service';
+import { ThemeService } from './@core/services/theme.service';
+import { AuthService } from './@core/services/auth.service';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
-import { NotificationsService } from './services/notifications.service';
+import { NotificationsService } from './@core/services/notifications.service';
 import { RemindersComponent } from './reminders/reminders.component';
 
 

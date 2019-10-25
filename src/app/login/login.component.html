@@ -1,6 +1,6 @@
-<ion-content padding>
+<ion-content class="ion-padding">
 
-  <ion-button float-right
+  <ion-button class="ion-float-right"
               color="medium"
               fill="clear"
               (click)="modalCtrl.dismiss(undefined, 'skipped')">
@@ -9,51 +9,62 @@
 
   <h2>Login</h2>
   <form [formGroup]="form"
-        (ngSubmit)="submit(form.value)" (keyup.enter)="submit(form.value)">
+        (ngSubmit)="submit(form.value)"
+        (keyup.enter)="submit(form.value)"
+        autocomplete="on">
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email"
-                 formControlName="email"
+      <ion-input formControlName="email"
                  debounce="1000"></ion-input>
-      <ion-note color="danger" *ngIf="email.invalid && email.value">Please enter a valid Email</ion-note>
+      <ion-note color="danger"
+                *ngIf="email.invalid && email.value">Please enter a valid Email</ion-note>
     </ion-item>
+
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password"
-                 formControlName="password"
-                 debounce="1000"></ion-input>
-      <ion-note color="danger" *ngIf="password.invalid && password.value">Please enter a valid Password</ion-note>
+      <ion-input formControlName="password"
+                 [type]="showPassword ? 'text' : 'password'"
+                 type="password"></ion-input>
+      <ion-button fill="clear"
+                  slot="end"
+                  (click)="showPassword = !showPassword">
+        <ion-icon [name]="showPassword ? 'eye' : 'eye-off'"></ion-icon>
+      </ion-button>
+      <ion-note color="danger"
+                *ngIf="password.invalid && password.value">Please enter a valid Password</ion-note>
     </ion-item>
 
     <ion-item lines="none"
-              *ngIf="error">
-      {{error}}
+              *ngIf="error"
+              class="error">
+      <div [innerHtml]="error"></div>
     </ion-item>
 
-    <div margin>
-      <ion-button float-left
-                  color="secondary"
-                  (click)="modalCtrl.dismiss(undefined, 'signup')">
-        Signup
-      </ion-button>
+    <ion-row margin>
+      <ion-col size="6"
+               text-left>
+        <ion-button color="secondary"
+                    (click)="modalCtrl.dismiss(undefined, 'signup')">
+          Signup
+        </ion-button>
+      </ion-col>
 
-      <ion-button float-right
-                  [disabled]="form.invalid"
-                  type="submit">
-        Login
-      </ion-button>
-    </div>
-
-    <div margin
-         text-center>
-      <ion-button fill="clear"
-                  size="small"
-                  color="medium"
-                  (click)="resetPassword()">
-        Reset Password
-      </ion-button>
-    </div>
-
+      <ion-col size="6"
+               text-right>
+        <ion-button [disabled]="form.invalid"
+                    type="submit">
+          Login
+        </ion-button>
+        <br>
+        <ion-button class="ion-margin-top"
+                    fill="clear"
+                    size="small"
+                    color="medium"
+                    (click)="resetPassword()">
+          Reset Password
+        </ion-button>
+      </ion-col>
+    </ion-row>
 
   </form>
 

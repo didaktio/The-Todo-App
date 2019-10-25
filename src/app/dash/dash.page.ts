@@ -4,10 +4,10 @@ import { AlertController, PopoverController } from '@ionic/angular';
 
 import { TodoFormComponent } from './todo-form/todo-form.component';
 import { HistoryComponent } from './history/history.component';
-import { TodoItem, EditTodoFormData } from '../utils/models';
-import { formatDateShort, formatDateLong } from '../utils/methods';
-import { TodosService, SortOption, SORT_OPTIONS } from '../services/todos.service';
-import { AuthService } from '../services/auth.service';
+import { TodoItem, EditTodoFormData } from 'todo-utils';
+import { formatDateShort, formatDateLong } from 'todo-utils';
+import { TodosService, SortOption, SORT_OPTIONS } from '../@core/services/todos.service';
+import { AuthService } from '../@core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { map, first } from 'rxjs/operators';
 

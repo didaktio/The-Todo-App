@@ -1,8 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PopoverController, IonCheckbox } from '@ionic/angular';
-import { EditTodoFormData, TodoItem } from 'src/app/utils/models';
+import { EditTodoFormData, TodoItem } from 'todo-utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { subMinutes, subHours, subDays } from 'date-fns';
+import { subMinutes, subHours, subDays, isFuture } from 'date-fns/esm';
+
+
+type Period = 'minutes' | 'hours' | 'days';
+type Reminder = {title: string; date: Date};
 
 @Component({
   selector: 'todo-form',
@@ -25,9 +29,13 @@ export class TodoFormComponent implements OnInit {
     }),
     highPriority: false,
     reminders: this.fb.group({
-      mins30: false,
+      minutes0: false,
+      minutes10: false,
+      minutes30: false,
       hours1: false,
-      days1: false
+      hours2: false,
+      days1: false,
+      days2: false
     })
   });
 
@@ -62,13 +70,12 @@ export class TodoFormComponent implements OnInit {
 
   sendRemindersClicked(el: IonCheckbox) {
     if (el.checked) {
+      this.reminders.get('minutes0').setValue(true);
       this.reminders.get('hours1').setValue(true);
       this.showReminders = true;
     }
     else {
-      this.reminders.get('mins30').setValue(false);
-      this.reminders.get('hours1').setValue(false);
-      this.reminders.get('days1').setValue(false);
+      this.reminders.reset();
       this.showReminders = false;
     }
   }
@@ -79,8 +86,6 @@ export class TodoFormComponent implements OnInit {
 
 
   save(formData: EditTodoFormData) {
-    console.log(formData)
-
     // Remove empty properties
     const data = this.removeEmptyProps(formData) as EditTodoFormData;
 
@@ -93,26 +98,31 @@ export class TodoFormComponent implements OnInit {
         dateDue.setSeconds(0);
         dateDue.setMilliseconds(0);
   
-        const reminders = [];
+        const reminders = [] as Reminder[];
         for (const key in data.reminders) if (data.reminders[key]) {
-          switch (key) {
-            case 'mins30': reminders.push({
-              title: '30 Minute',
-              date: subMinutes(dateDue, 30).toISOString()
+          const _ = key.split(/[0-9]/),
+           period = _[0] as Period,
+           amount = +_[1];
+
+           switch (period) {
+            case 'minutes': reminders.push({
+              title: `${amount} ${period}`,
+              date: subMinutes(dateDue, amount)
             });
               break;
-            case 'hours1': reminders.push({
-              title: '1 Hour',
-              date: subHours(dateDue, 1).toISOString()
+            case 'hours': reminders.push({
+              title: `${amount} ${period}`,
+              date: subHours(dateDue, amount)
             });
               break;
-            case 'days1': reminders.push({
-              title: '1 Day',
-              date: subDays(dateDue, 1).toISOString()
+            case 'days': reminders.push({
+              title: `${amount} ${period}`,
+              date: subDays(dateDue, amount)
             });
           }
+
         }
-        data.reminders = reminders;
+        data.reminders = reminders.filter(r => isFuture(r.date)).map(({date, title}) => ({date: date.toISOString(), title}));
       }
     } 
     this.popoverCtrl.dismiss(data);

@@ -1,4 +1,4 @@
-import { parseISO, format } from 'date-fns/esm';
+import { parseISO, format } from 'date-fns';
 
 export const formatDateShort = (d: string) => {
     return format(parseISO(d), 'dd/MM/yy');

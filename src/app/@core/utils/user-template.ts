@@ -1,4 +1,4 @@
-import { TodoUser } from './models';
+import { TodoUser } from 'todo-utils';
 
 export const USER_TEMPLATE = {
     todos: {

@@ -1,7 +1,7 @@
-<div padding>
+<div class="ion-padding">
 
   <h2>{{item ? 'Edit' : 'Add'}} Todo Item</h2>
-  <h6 text-center>{{title.value}}</h6>
+  <h6 class="ion-text-center">{{title.value}}</h6>
 
   <form [formGroup]="todoForm"
         (ngSubmit)="save(todoForm.value)">
@@ -66,7 +66,11 @@
 
       <h5>Reminders</h5>
       <div class="option">
-        <ion-checkbox formControlName="mins30"></ion-checkbox>
+        <ion-checkbox formControlName="minutes10"></ion-checkbox>
+        <span>10 Minutes</span>
+      </div>
+      <div class="option">
+        <ion-checkbox formControlName="minutes30"></ion-checkbox>
         <span>30 Minutes</span>
       </div>
       <div class="option">
@@ -74,14 +78,25 @@
         <span>1 Hour</span>
       </div>
       <div class="option">
+        <ion-checkbox formControlName="hours2"></ion-checkbox>
+        <span>2 Hour</span>
+      </div>
+      <div class="option">
         <ion-checkbox formControlName="days1"></ion-checkbox>
         <span>1 Day</span>
       </div>
-
+      <div class="option">
+        <ion-checkbox formControlName="days2"></ion-checkbox>
+        <span>2 Day</span>
+      </div>
+      <div class="option">
+        <ion-checkbox formControlName="minutes0"></ion-checkbox>
+        <span>On the Dot</span>
+      </div>
     </div>
 
     <div margin
-         float-right>
+         class="ion-float-right">
       <ion-button slot="end"
                   fill="clear"
                   (click)="cancel()">

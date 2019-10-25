@@ -20,10 +20,11 @@ export class LoginComponent implements OnInit {
     private afAuth: AngularFireAuth) { }
 
   form = this.fb.group({
-    email: ['', [Validators.email, Validators.required]],
+    email: ['', [Validators.required]],
     password: ['', [Validators.required]]
   });
   error: string;
+  showPassword = false;
 
   ngOnInit() { }
 
@@ -34,16 +35,16 @@ export class LoginComponent implements OnInit {
     return this.form.get('password');
   }
 
-  login(email: string, password: string) {
+  login({email, password}) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
-  async submit({email, password}) {
+  async submit({ email, password }) {
     const loading = await this.loadingCtrl.create();
     loading.present();
 
     try {
-      await this.login(email, password);
+      await this.login({email, password});
       this.modalCtrl.dismiss(undefined, 'success');
 
     } catch (error) {
@@ -52,8 +53,16 @@ export class LoginComponent implements OnInit {
           break;
         case 'auth/user-not-found': this.error = 'Login details not recognised.';
           break;
-        default: this.error = 'An error has occurred. The cause could be rebellious monkeys. Try: trying again, refreshing the page, resetting your password.'
-        console.error(error);
+        default: this.error = `An error has occurred.
+          The cause could be rebellious monkeys.
+          Try: 
+          <ul>        
+          <li>trying again</li>
+          <li>refreshing the page</li>
+          <li>resetting your password</li>
+          <li>contacting support at: contact@thetodoapp.com</li>
+          </ul>`;
+          console.error(error);
       }
     }
     loading.dismiss();

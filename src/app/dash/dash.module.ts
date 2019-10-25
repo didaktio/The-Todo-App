@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
-import { IonicModule } from '@ionic/angular';
 
 import { DashPage } from './dash.page';
 import { TodoFormComponent } from './todo-form/todo-form.component';
 import { HistoryComponent } from './history/history.component';
 import { ItemWidgetComponent } from './history/item-widget/item-widget.component';
+import { CoreModule } from '../@core/core.module';
 
 const routes: Routes = [
   {
@@ -19,10 +16,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ReactiveFormsModule,
+    CoreModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

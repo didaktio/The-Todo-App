@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { ToastController, ModalController } from '@ionic/angular';
-import { tap, first, switchMap, map, shareReplay } from 'rxjs/operators';
-
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-import { TodoUser } from '../utils/models';
 import { of, Observable } from 'rxjs';
-import { USER_TEMPLATE } from '../utils/user-template';
-import { LoginComponent } from '../login/login.component';
-import { SignupComponent } from '../signup/signup.component';
+import { tap, first, switchMap, map, shareReplay } from 'rxjs/operators';
+
+import { LoginComponent } from '../../login/login.component';
+import { SignupComponent } from '../../signup/signup.component';
+import { TodoUser } from 'todo-utils';
 
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +22,10 @@ export class AuthService {
         private afAuth: AngularFireAuth,
         private afs: AngularFirestore) { }
 
-    loginWarning: HTMLIonToastElement;
+    private skipWarning: HTMLIonToastElement;
+    private signupModal: HTMLIonModalElement;
+    private loginModal: HTMLIonModalElement;
+
     loggedIn: boolean;
     name: string;
     user$ = this.afAuth.authState.pipe(
@@ -38,6 +40,7 @@ export class AuthService {
         shareReplay()
     ) as Observable<TodoUser>;
 
+
     get uid() {
         return this.afAuth.auth.currentUser.uid;
     }
@@ -47,7 +50,6 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        if (this.loginWarning && this.loginWarning.present) this.loginWarning.dismiss();
         return this.afAuth.auth.signInWithEmailAndPassword(email, password);
     }
 
@@ -56,13 +58,19 @@ export class AuthService {
     }
 
     async openSignup() {
-        const signup = await this.modalCtrl.create({
-            component: SignupComponent,
-            cssClass: 'modal signup'
-        });
-        await signup.present();
+        if (this.signupModal) return; // Prevent duplicate
+        if (this.skipWarning) this.dismissSkipWarning();
 
-        const { role } = await signup.onDidDismiss();
+        this.signupModal = await this.modalCtrl.create({
+            component: SignupComponent,
+            cssClass: 'modal signup',
+            backdropDismiss: false
+        });
+        await this.signupModal.present();
+
+        const { role } = await this.signupModal.onDidDismiss();
+        this.signupModal = null;
+
         if (role == 'skipped') this.presentSkipWarning();
         if (role == 'login') return this.openLogin();
 
@@ -70,28 +78,43 @@ export class AuthService {
     }
 
     async openLogin() {
-        const login = await this.modalCtrl.create({
-            component: LoginComponent,
-            cssClass: 'modal login'
-        });
-        await login.present();
+        if (this.loginModal) return; // Prevent duplicate
+        if (this.skipWarning) this.dismissSkipWarning();
 
-        const { role } = await login.onDidDismiss();
+        this.loginModal = await this.modalCtrl.create({
+            component: LoginComponent,
+            cssClass: 'modal login',
+            backdropDismiss: false
+        });
+        await this.loginModal.present();
+
+        const { role } = await this.loginModal.onDidDismiss();
+        this.loginModal = null;
+
         if (role == 'signup') return this.openSignup();
         else if (role == 'skipped') this.presentSkipWarning();
 
         return true;
     }
 
+    private dismissSkipWarning() {
+        if(this.skipWarning) this.skipWarning.dismiss();
+    }
+
     private async presentSkipWarning() {
-        this.loginWarning = await this.toastCtrl.create({
+        if (this.skipWarning) return; // Prevent duplicate
+
+        this.skipWarning = await this.toastCtrl.create({
             header: 'By the way...',
             message: `Skipping login/signup means your data won't be saved. You also can't customise the app, set reminders or export data.`,
             showCloseButton: true,
             closeButtonText: 'Dismiss',
             color: 'danger'
         });
-        this.loginWarning.present();
+        await this.skipWarning.present();
+
+        await this.skipWarning.onDidDismiss();
+        this.skipWarning = null;
     }
 
 

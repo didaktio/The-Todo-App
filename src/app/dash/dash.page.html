@@ -27,7 +27,7 @@
 
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
 
   <ion-grid fixed>
 
@@ -71,14 +71,18 @@
 
               <ion-item-option color="danger"
                                (click)="delete(t)">
-                <ion-icon slot="icon-only"
-                          name="trash"></ion-icon>
+                <!-- <ion-icon slot="icon-only"
+                          name="trash"></ion-icon> -->
+                <fa-icon class="sliding-icon" [icon]="['fas', 'recycle']"
+                         size="lg"></fa-icon>
               </ion-item-option>
 
               <ion-item-option *ngIf="!t.complete"
                                (click)="openTodoForm(t, i)">
-                <ion-icon slot="icon-only"
-                          name="create"></ion-icon>
+                <!-- <ion-icon slot="icon-only"
+                          name="create"></ion-icon> -->
+                <fa-icon class="sliding-icon" [icon]="['fas', 'edit']"
+                         size="lg"></fa-icon>
               </ion-item-option>
 
             </ion-item-options>
@@ -132,7 +136,8 @@
 
   <ion-row>
 
-    <ion-col size="6" sizeMd="12">
+    <ion-col size="6"
+             sizeMd="12">
       <ion-item [button]="!selectedFilterOptions.length ? true : false"
                 lines="none"
                 detail="false"
@@ -191,8 +196,11 @@
   <ion-button fill="solid"
               color="primary"
               (click)="openTodoForm()">
-    <ion-icon slot="start"
-              name="add"></ion-icon>
+    <!-- <ion-icon slot="start"
+              name="add"></ion-icon> -->
+
+    <fa-icon [icon]="['fas', 'plus-square']"
+             size="lg"></fa-icon>
     Add
   </ion-button>
 </ng-template>

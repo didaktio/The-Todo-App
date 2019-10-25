@@ -10,7 +10,8 @@ messaging.setBackgroundMessageHandler(payload => {
   var title = 'New notification!';
   var notificationOptions = {
     body: 'I am a the BODY placeholder.',
-    icon: '[ICON_PATH]'
+    icon: '[ICON_PATH]',
+    sound: 'default'
   };
 
   return self.registration.showNotification(title, notificationOptions);

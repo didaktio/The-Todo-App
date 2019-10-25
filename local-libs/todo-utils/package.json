@@ -1,0 +1,18 @@
+{
+  "name": "todo-utils",
+  "version": "1.0.0",
+  "description": "Shared interfaces and methods between server and app environments.",
+  "main": "dist/index",
+  "types": "dist/index",
+  "private": true,
+  "scripts": {
+    "build": "tsc && npm pack",
+    "install1": "cd ../../ && npm i local-libs/todo-utils/*.tgz",
+    "install2": "cd ../../functions && mkdir -p local-libs/todo-utils/ && mv ../local-libs/todo-utils/*.tgz local-libs/todo-utils/ && npm i local-libs/todo-utils/*.tgz",
+    "deploy": "npm run build && npm run install1 && npm run install2"
+    },
+  "dependencies": {
+    "date-fns": "^2.1.0"
+  },
+  "files": ["dist"]
+}

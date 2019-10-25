@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, LoadingController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { ThemeService } from '../services/theme.service';
-import { TodosService } from '../services/todos.service';
-import { AuthService } from '../services/auth.service';
+import { ThemeService } from '../@core/services/theme.service';
+import { TodosService } from '../@core/services/todos.service';
+import { AuthService } from '../@core/services/auth.service';
 
 import { first, map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
-import { TodoItem } from '../utils/models';
-import { USER_TEMPLATE } from '../utils/user-template';
-import { DbService } from '../services/db.service';
+import { TodoItem } from 'todo-utils';
+import { USER_TEMPLATE } from '../@core/utils/user-template';
+import { DbService } from '../@core/services/db.service';
 import { NgForm } from '@angular/forms';
 
 

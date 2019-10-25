@@ -1,10 +1,14 @@
 ion-header {
     .add-btn {
         display: none;
-    }
 
-    @media only screen and (min-width: 600px) {
-        display: block;
+        @media only screen and (min-width: 600px) {
+            display: block;
+        }
+        
+        fa-icon {
+            padding-right: 8px;
+        }
     }
 }
 
@@ -54,6 +58,7 @@ ion-badge {
 
 .list-settings-col {
     display: none;
+
     @media only screen and (min-width: 600px) {
         display: block;
     }
@@ -61,6 +66,7 @@ ion-badge {
 
 .list-settings-toolbar {
     --background: ghostwhite;
+
     ion-item {
         --background: transparent;
     }
@@ -70,4 +76,8 @@ ion-footer {
     @media only screen and (min-width: 600px) {
         display: none;
     }
+}
+
+.sliding-icon {
+    padding: 0 16px;
 }

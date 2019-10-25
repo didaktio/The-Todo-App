@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { USER_TEMPLATE } from '../utils/user-template';
+import { USER_TEMPLATE } from '../@core/utils/user-template';
 
 @Component({
   selector: 'app-signup',
@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
     password: ['', [Validators.required]]
   });
   error: string;
+  showPassword = false;
 
   ngOnInit() { }
 
@@ -38,7 +39,7 @@ export class SignupComponent implements OnInit {
     return this.form.get('password');
   }
 
-  private async createUser(email: string, password: string, name = '') {
+  private async createUser({email, password, name}) {
     const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
 
     const template = USER_TEMPLATE;
@@ -57,7 +58,7 @@ export class SignupComponent implements OnInit {
     loading.present();
 
     try {
-      await this.createUser(email, password, name);
+      await this.createUser({email, password, name});
       this.modalCtrl.dismiss();
 
     } catch (error) {
@@ -68,7 +69,15 @@ export class SignupComponent implements OnInit {
           break;
         case 'auth/invalid-email': this.error = 'Login attempt failed: Invalid email address';
           break;
-        default: this.error = 'An error has occurred. The cause could be rebellious monkeys. Try: trying again, refreshing the page, resetting your password.';
+        default: this.error = `An error has occurred.
+        The cause could be rebellious monkeys.
+        Try: 
+        <ul>        
+        <li>trying again</li>
+        <li>refreshing the page</li>
+        <li>resetting your password</li>
+        <li>contacting support at: contact@thetodoapp.com</li>
+        </ul>`;
         console.error(error);
       }
     }

@@ -15,30 +15,18 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from 'src/environments/environment';
-import { TrashComponent } from './trash/trash.component';
-import { SettingsComponent } from './settings/settings.component';
-import { RemindersComponent } from './reminders/reminders.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignupComponent } from './signup/signup.component';
+
 import { DashPageModule } from './dash/dash.module';
+import { FontsModule } from './@core/fonts/fonts.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TrashComponent,
-    SettingsComponent,
-    RemindersComponent,
-    LoginComponent,
-    SignupComponent
+    AppComponent
   ],
   entryComponents: [
-    TrashComponent,
-    SettingsComponent,
-    RemindersComponent,
-    LoginComponent,
-    SignupComponent
+
   ],
   imports: [
     BrowserModule,
@@ -50,9 +38,8 @@ import { DashPageModule } from './dash/dash.module';
     AngularFirestoreModule,
     AngularFireMessagingModule,
     ServiceWorkerModule.register('/master-sw.js', { enabled: environment.production }),
-    FormsModule,
-    ReactiveFormsModule,
-    DashPageModule
+    DashPageModule,
+    FontsModule
   ],
   providers: [
     AngularFireAuth,

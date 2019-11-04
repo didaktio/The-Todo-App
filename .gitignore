@@ -29,12 +29,12 @@ plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
 
-src/environments/
-local-libs/dist/
-local-libs/*.tgz
-
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
 
 dist/
+src/environments/
+local-libs/dist/
+local-libs/*.tgz
+.firebase

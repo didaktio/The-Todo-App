@@ -28,7 +28,7 @@ export class NotificationsService {
                 this.lastUsedToken = user.deviceToken;
                 return this.notificationPerms$
             }),
-        ).subscribe(async res => {
+        ).subscribe(async (res: { state: string, deviceToken: string }) => {
             if (!res) return;
 
             let { state, deviceToken } = res;

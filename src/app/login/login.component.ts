@@ -40,6 +40,9 @@ export class LoginComponent implements OnInit {
   }
 
   async submit({ email, password }) {
+    if(this.form.invalid) return this.error = 'Something is wrong. Please try re-typing your details.';
+
+  
     const loading = await this.loadingCtrl.create();
     loading.present();
 

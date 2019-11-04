@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-
 import { Platform, PopoverController, ModalController } from '@ionic/angular';
+
 import { TrashComponent } from './trash/trash.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ThemeService } from './@core/services/theme.service';
 import { AuthService } from './@core/services/auth.service';
+import { NotificationsService } from './@core/services/notifications.service';
+import { RemindersComponent } from './reminders/reminders.component';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
-import { NotificationsService } from './@core/services/notifications.service';
-import { RemindersComponent } from './reminders/reminders.component';
 
 
 @Component({
@@ -30,16 +30,10 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
-    this.platform.ready();
+  async initializeApp() {
+    await this.platform.ready();
 
-    // TODO ERROR
-    try {
-      firebase.messaging().usePublicVapidKey('BML_VlYwbX9bxIy2rnkn7_7bpcBj1lKe7u_sgaEse1ub9igV_KlWHPLmRPvp8n1EKaIoaIp56JmI7GvMPEAB1EQ');
-    } catch (error) {
-      console.error(error);
-    }
-
+    firebase.messaging().usePublicVapidKey('BML_VlYwbX9bxIy2rnkn7_7bpcBj1lKe7u_sgaEse1ub9igV_KlWHPLmRPvp8n1EKaIoaIp56JmI7GvMPEAB1EQ');
   }
 
   async openTrash() {

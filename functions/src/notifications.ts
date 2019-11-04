@@ -3,6 +3,7 @@ import { TodoUser } from 'todo-utils';
 
 import { differenceInMinutes, format } from 'date-fns';
 
+
 // Runs every minute
 export const pushReminder = functions.region(regions.default).pubsub.schedule('every 1 minutes')
     .onRun(async context => {
@@ -90,4 +91,4 @@ export const pushReminder = functions.region(regions.default).pubsub.schedule('e
             );
         }
         return Promise.all(promises);
-    })
+    });

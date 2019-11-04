@@ -11,7 +11,7 @@
   <form [formGroup]="form"
         (ngSubmit)="submit(form.value)"
         (keyup.enter)="submit(form.value)"
-        autocomplete="on">
+        autocomplete="off">
     <ion-item>
       <ion-label position="floating">Email</ion-label>
       <ion-input formControlName="email"
@@ -23,8 +23,7 @@
     <ion-item>
       <ion-label position="floating">Password</ion-label>
       <ion-input formControlName="password"
-                 [type]="showPassword ? 'text' : 'password'"
-                 type="password"></ion-input>
+                 [type]="showPassword ? 'text' : 'password'"></ion-input>
       <ion-button fill="clear"
                   slot="end"
                   (click)="showPassword = !showPassword">
@@ -40,9 +39,9 @@
       <div [innerHtml]="error"></div>
     </ion-item>
 
-    <ion-row margin>
+    <ion-row class="ion-margin">
       <ion-col size="6"
-               text-left>
+               class="ion-text-left">
         <ion-button color="secondary"
                     (click)="modalCtrl.dismiss(undefined, 'signup')">
           Signup
@@ -50,9 +49,8 @@
       </ion-col>
 
       <ion-col size="6"
-               text-right>
-        <ion-button [disabled]="form.invalid"
-                    type="submit">
+               class="ion-text-right">
+        <ion-button type="submit">
           Login
         </ion-button>
         <br>

@@ -1,7 +1,7 @@
 <div class="ion-padding">
 
   <h2>{{item ? 'Edit' : 'Add'}} Todo Item</h2>
-  <h6 class="ion-text-right">{{title.value}}</h6>
+  <h6 class="ion-text-left">{{title.value}}</h6>
 
   <form [formGroup]="todoForm"
         (ngSubmit)="save(todoForm.value)">

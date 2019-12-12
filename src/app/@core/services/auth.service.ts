@@ -9,7 +9,7 @@ import { tap, first, switchMap, map, shareReplay } from 'rxjs/operators';
 
 import { LoginComponent } from '../../login/login.component';
 import { SignupComponent } from '../../signup/signup.component';
-import { TodoUser } from 'todo-utils';
+import { TodoUser } from 'utils';
 
 
 @Injectable({ providedIn: 'root' })
@@ -22,7 +22,7 @@ export class AuthService {
         private afAuth: AngularFireAuth,
         private afs: AngularFirestore) { }
 
-    private skipWarning: HTMLIonToastElement;
+
     private signupModal: HTMLIonModalElement;
     private loginModal: HTMLIonModalElement;
 
@@ -59,7 +59,6 @@ export class AuthService {
 
     async openSignup() {
         if (this.signupModal) return; // Prevent duplicate
-        if (this.skipWarning) this.dismissSkipWarning();
 
         this.signupModal = await this.modalCtrl.create({
             component: SignupComponent,
@@ -71,7 +70,6 @@ export class AuthService {
         const { role } = await this.signupModal.onDidDismiss();
         this.signupModal = null;
 
-        if (role == 'skipped') this.presentSkipWarning();
         if (role == 'login') return this.openLogin();
 
         return true;
@@ -79,7 +77,6 @@ export class AuthService {
 
     async openLogin() {
         if (this.loginModal) return; // Prevent duplicate
-        if (this.skipWarning) this.dismissSkipWarning();
 
         this.loginModal = await this.modalCtrl.create({
             component: LoginComponent,
@@ -92,31 +89,9 @@ export class AuthService {
         this.loginModal = null;
 
         if (role == 'signup') return this.openSignup();
-        else if (role == 'skipped') this.presentSkipWarning();
 
         return true;
     }
-
-    private dismissSkipWarning() {
-        if(this.skipWarning) this.skipWarning.dismiss();
-    }
-
-    private async presentSkipWarning() {
-        if (this.skipWarning) return; // Prevent duplicate
-
-        this.skipWarning = await this.toastCtrl.create({
-            header: 'By the way...',
-            message: `Skipping login/signup means your data won't be saved. You also can't customise the app, set reminders or export data.`,
-            showCloseButton: true,
-            closeButtonText: 'Dismiss',
-            color: 'danger'
-        });
-        await this.skipWarning.present();
-
-        await this.skipWarning.onDidDismiss();
-        this.skipWarning = null;
-    }
-
 
     deleteUser() {
         return this.storage.remove('todoCredential');

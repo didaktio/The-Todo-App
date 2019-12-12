@@ -10,6 +10,7 @@ import { RemindersComponent } from './reminders/reminders.component';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
+import { SwUpdate } from '@angular/service-worker';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class AppComponent {
     private modalCtrl: ModalController,
     public theme: ThemeService,
     public auth: AuthService,
-    public notifications: NotificationsService) {
+    public notifications: NotificationsService,
+    private swUpdate: SwUpdate) {
 
     this.initializeApp();
   }
@@ -34,6 +36,10 @@ export class AppComponent {
     await this.platform.ready();
 
     firebase.messaging().usePublicVapidKey('BML_VlYwbX9bxIy2rnkn7_7bpcBj1lKe7u_sgaEse1ub9igV_KlWHPLmRPvp8n1EKaIoaIp56JmI7GvMPEAB1EQ');
+
+    if (this.swUpdate.available) this.swUpdate.available.subscribe(() => {
+      if (confirm('A new version of The Todo App is available. Load it?')) window.location.reload();
+    });
   }
 
   async openTrash() {

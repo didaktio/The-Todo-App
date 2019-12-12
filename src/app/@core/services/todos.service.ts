@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from './auth.service';
 import { DbService, arrayAdd, arrayRemove } from './db.service';
-import { TodoItem, TodoUser } from 'todo-utils';
+import { TodoItem, TodoUser } from 'utils';
 
 import { map, first, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of, Observable } from 'rxjs';
@@ -33,7 +33,7 @@ export class TodosService {
   trash$ = this.auth.user$.pipe(map(user => user ? user.trash : null));
 
   add(item: TodoItem) {
-    this.db.updateDb({
+    return this.db.updateDb({
       todos: {
         pending: arrayAdd({
           ...item,
@@ -55,7 +55,7 @@ export class TodosService {
     const index = list.findIndex(t => t === before);
     list.splice(index, 1, after);
 
-    this.db.updateDb({
+    return this.db.updateDb({
       todos: { [before.complete ? 'complete' : 'pending']: list },
       ...(!before.reminders.length && after.reminders.length) ? {
         reminders: arrayAdd(...after.reminders.map(r => r.date))
@@ -67,7 +67,7 @@ export class TodosService {
   }
 
   delete(item: TodoItem) {
-    this.db.updateDb({
+    return this.db.updateDb({
       todos: {
         pending: arrayRemove(item),
         completed: arrayRemove(item),
@@ -77,7 +77,7 @@ export class TodosService {
   }
 
   async complete(item: TodoItem) {
-    this.db.updateDb({
+    return this.db.updateDb({
       todos: {
         pending: arrayRemove(item),
         completed: arrayAdd({
@@ -88,15 +88,27 @@ export class TodosService {
     });
   }
 
+  async uncomplete(item: TodoItem){
+    return this.db.updateDb({
+      todos: {
+        completed: arrayRemove(item),
+        pending: arrayAdd({
+          ...item,
+          complete: false
+        })
+      }
+    });
+  }
+
   restoreFromTrash(item: TodoItem) {
-    this.db.updateDb({
+    return this.db.updateDb({
       trash: arrayRemove(item),
       todos: { [item.complete ? 'completed' : 'pending']: arrayAdd(item) }
     });
   }
 
   clearTrash() {
-    this.db.updateDb({ trash: [] });
+    return this.db.updateDb({ trash: [] });
   }
 
   private mergeIncoming(current: TodoItem[], incoming: TodoItem[]) {
@@ -109,23 +121,23 @@ export class TodosService {
   }
 
   async setTodos(todos: TodoUser['todos'], { merge } = { merge: false }) {
-    if (!merge) this.db.updateDb({ todos });
+    if (!merge) return this.db.updateDb({ todos });
     else {
       const currentTodos = await this.auth.user$.pipe(map(user => user.todos), first()).toPromise();
       currentTodos.completed = this.mergeIncoming(currentTodos.completed, todos.completed);
       currentTodos.pending = this.mergeIncoming(currentTodos.pending, todos.pending);
 
-      this.db.updateDb({ todos: currentTodos });
+      return this.db.updateDb({ todos: currentTodos });
     }
 
   }
 
   async setTrash(trash: TodoItem[], { merge } = { merge: false }) {
-    if (!merge) this.db.updateDb({ trash });
+    if (!merge) return this.db.updateDb({ trash });
     else {
       let currentTrash = await this.trash$.pipe(first()).toPromise();
       currentTrash = this.mergeIncoming(currentTrash, trash);
-      this.db.updateDb({ trash: currentTrash });
+      return this.db.updateDb({ trash: currentTrash });
     }
   }
 

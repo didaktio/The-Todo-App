@@ -81,7 +81,7 @@
         <ion-col *ngFor="let t of theme.themes | keyvalue"
                  size="3">
           <ion-item lines="full"
-                    [style]="sanitizeStyle('--background', t.value.background)">
+                    [style.--background]="t.value.background">
             <ion-label position="stacked">{{ t.key | titlecase }}</ion-label>
             <ion-radio [checked]="t.key === theme.activeTheme"
                        [value]="t.key"></ion-radio>

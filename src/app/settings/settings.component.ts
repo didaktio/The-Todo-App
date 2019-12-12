@@ -10,7 +10,7 @@ import { first, map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 
-import { TodoItem } from 'todo-utils';
+import { TodoItem } from 'utils';
 import { USER_TEMPLATE } from '../@core/utils/user-template';
 import { DbService } from '../@core/services/db.service';
 import { NgForm } from '@angular/forms';
@@ -38,11 +38,6 @@ export class SettingsComponent implements OnInit {
     map(user => user ? ({ ...user.general, ...user.settings }) : null));
 
   ngOnInit() { }
-
-  sanitizeStyle(key: string, value: string) {
-    const style = `${key}: ${value}`;
-    return this.sanitizer.bypassSecurityTrustStyle(style);
-  }
 
   updateReminderEmails(emails: boolean) {
     this.db.updateDb({ general: { preferences: { reminders: { emails } } } });

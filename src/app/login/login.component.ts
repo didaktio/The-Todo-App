@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   });
   error: string;
   showPassword = false;
+  failures = 0;
 
   ngOnInit() { }
 
@@ -51,10 +52,11 @@ export class LoginComponent implements OnInit {
       this.modalCtrl.dismiss(undefined, 'success');
 
     } catch (error) {
+      this.failures++;
       switch (error.code) {
         case 'invalid-email': this.error = 'The submitted email is invalid.';
           break;
-        case 'auth/user-not-found': this.error = 'Login details not recognised.';
+        case 'auth/user-not-found': case 'auth/wrong-password': this.error = 'Login details not recognised.';
           break;
         default: this.error = `An error has occurred.
           The cause could be rebellious monkeys.

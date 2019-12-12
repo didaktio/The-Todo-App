@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TodosService } from '../@core/services/todos.service';
-import { formatDateShort } from 'todo-utils';
+import { formatDateShort } from 'utils';
 import { PopoverController } from '@ionic/angular';
-import { TodoItem } from 'todo-utils';
+import { TodoItem } from 'utils';
 
 
 @Component({

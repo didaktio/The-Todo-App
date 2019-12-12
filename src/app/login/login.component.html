@@ -1,12 +1,5 @@
 <ion-content class="ion-padding">
 
-  <ion-button class="ion-float-right"
-              color="medium"
-              fill="clear"
-              (click)="modalCtrl.dismiss(undefined, 'skipped')">
-    Skip
-  </ion-button>
-
   <h2>Login</h2>
   <form [formGroup]="form"
         (ngSubmit)="submit(form.value)"
@@ -24,7 +17,7 @@
       <ion-label position="floating">Password</ion-label>
       <ion-input formControlName="password"
                  [type]="showPassword ? 'text' : 'password'"></ion-input>
-      <ion-button fill="clear"
+      <ion-button id="showPasswordBtn" fill="clear"
                   slot="end"
                   (click)="showPassword = !showPassword">
         <ion-icon [name]="showPassword ? 'eye' : 'eye-off'"></ion-icon>
@@ -53,9 +46,11 @@
         <ion-button type="submit">
           Login
         </ion-button>
-        <br>
-        <ion-button class="ion-margin-top"
-                    fill="clear"
+      </ion-col>
+
+      <ion-col *ngIf="failures > 0" size="12"
+               class="ion-text-center">
+        <ion-button fill="clear"
                     size="small"
                     color="medium"
                     (click)="resetPassword()">

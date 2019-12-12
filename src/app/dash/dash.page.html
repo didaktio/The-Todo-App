@@ -46,7 +46,7 @@
                             [hidden]="shouldHide(t)">
 
             <ion-item button
-                      (click)="openTodoDetails(t, i)">
+                      (click)="openTodoDetails(t)">
 
               <ion-label [ngClass]="{'item-complete': t.complete}">
                 <h2>{{t.title}} <ion-badge *ngIf="!t.complete && t.highPriority"
@@ -78,7 +78,7 @@
               </ion-item-option>
 
               <ion-item-option *ngIf="!t.complete"
-                               (click)="openTodoForm(t, i)">
+                               (click)="openTodoForm(t)">
                 <!-- <ion-icon slot="icon-only"
                           name="create"></ion-icon> -->
                 <fa-icon class="sliding-icon" [icon]="['fas', 'edit']"

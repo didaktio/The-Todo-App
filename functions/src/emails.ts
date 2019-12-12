@@ -1,5 +1,5 @@
 import { functions, regions, transporter } from './config';
-import { Reminder } from 'todo-utils';
+import { Reminder } from 'utils';
 
 
 // Triggers when a new reminder object is added to any user's 'reminders' subcollection

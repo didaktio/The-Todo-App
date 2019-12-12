@@ -4,8 +4,8 @@ import { AlertController, PopoverController } from '@ionic/angular';
 
 import { TodoFormComponent } from './todo-form/todo-form.component';
 import { HistoryComponent } from './history/history.component';
-import { TodoItem, EditTodoFormData } from 'todo-utils';
-import { formatDateShort, formatDateLong } from 'todo-utils';
+import { TodoItem, EditTodoFormData } from 'utils';
+import { formatDateShort, formatDateLong } from 'utils';
 import { TodosService, SortOption, SORT_OPTIONS } from '../@core/services/todos.service';
 import { AuthService } from '../@core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
@@ -92,6 +92,14 @@ export class DashPage implements OnInit {
       ],
       cssClass: `alert-todo-details${item.highPriority ? ' high-priority' : ''}${item.complete ? ' item-complete' : ''}`
     });
+
+    if (item.complete) dialog.buttons = [
+      {
+        text: 'Uncomplete',
+        handler: () => this.todos.uncomplete(item)
+      },
+      ...dialog.buttons
+    ];
 
     if (!item.complete) dialog.buttons = [
       {

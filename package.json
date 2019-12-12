@@ -1,6 +1,6 @@
 {
   "name": "todo-app",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "author": "JP",
   "homepage": "https://thetodoapp.com",
   "scripts": {
@@ -43,8 +43,8 @@
     "jszip": "^3.2.2",
     "rxjs": "^7.0.0-alpha.0",
     "stream": "0.0.2",
-    "todo-utils": "file:local-libs/todo-utils/todo-utils-1.0.0.tgz",
     "tslib": "^1.9.0",
+    "utils": "file:utils/utils-1.0.1.tgz",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

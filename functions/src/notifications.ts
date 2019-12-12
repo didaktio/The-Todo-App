@@ -1,5 +1,5 @@
-import { functions, regions, admin } from './config';
-import { TodoUser } from 'todo-utils';
+import { functions, regions, admin, DocumentReference } from './config';
+import { TodoUser } from 'utils';
 
 import { differenceInMinutes, format } from 'date-fns';
 
@@ -16,7 +16,7 @@ export const pushReminder = functions.region(regions.default).pubsub.schedule('e
         // Find user documents where the reminders array contains the current UTC time as an ISO string.
         const matches = (await admin.firestore().collection('users')
             .where('reminders', 'array-contains', nowAsISO)
-            .get()).docs.map(doc => ({ ...doc.data(), ref: doc.ref })) as (TodoUser & { ref: FirebaseFirestore.DocumentReference })[];
+            .get()).docs.map(doc => ({ ...doc.data(), ref: doc.ref })) as (TodoUser & { ref: DocumentReference })[];
 
         const promises = [] as any[];
 

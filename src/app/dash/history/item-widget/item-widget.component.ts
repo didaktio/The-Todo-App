@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { TodoItem } from 'todo-utils';
-import { formatDateShort } from 'todo-utils';
+import { TodoItem } from 'utils';
+import { formatDateShort } from 'utils';
 
 
 @Component({

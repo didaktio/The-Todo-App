@@ -68,10 +68,6 @@ ion-grid {
     .alert-button-group {
         flex-direction: row !important;
 
-        .skip-btn {
-            color: var(--ion-color-medium);
-        }
-
         .main-btn {
             background: var(--ion-color-primary);
             color: var(--ion-color-light);

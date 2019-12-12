@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PopoverController, IonCheckbox } from '@ionic/angular';
-import { EditTodoFormData, TodoItem } from 'todo-utils';
+import { EditTodoFormData, TodoItem } from 'utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { subMinutes, subHours, subDays, isFuture } from 'date-fns/esm';
 

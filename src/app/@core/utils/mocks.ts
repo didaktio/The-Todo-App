@@ -1,4 +1,4 @@
-import { TodoItem } from 'todo-utils';
+import { TodoItem } from 'utils';
 import { subDays, addDays, addMinutes } from 'date-fns';
 
 const genID = () => Math.random().toString(36).substring(8);

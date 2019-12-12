@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../@core/services/auth.service';
 import { map } from 'rxjs/operators';
 import { PopoverController } from '@ionic/angular';
-import { formatDateLong } from 'todo-utils';
+import { formatDateLong } from 'utils';
 import { DbService, arrayRemove } from '../@core/services/db.service';
 
 @Component({

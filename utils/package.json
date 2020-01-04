@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc && cp package.json dist && cd dist && npm pack && mv *.tgz ../utils.tgz",
     "installApp": "cd ../ && npm i ./utils/*.tgz",
-    "installFunctions": "cd ../functions && mkdir -p src/utils/ && mv ../utils/*.tgz src/utils/ && npm i ./src/utils/*.tgz && rm package-lock.json",
+    "installFunctions": "cd ../functions && mkdir -p src/utils/ && cp ../utils/*.tgz src/utils/ && npm i ./src/utils/*.tgz && rm package-lock.json",
     "deploy": "npm version patch && npm run build && npm run installApp && npm run installFunctions"
   },
   "dependencies": {

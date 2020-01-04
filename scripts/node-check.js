@@ -26,7 +26,7 @@ fs.readFile(path.join(__dirname, '../.nvmrc'), 'utf8', (error, data) => {
 
     // If partial match, post a warning
     if (versionMatchesMajor) {
-        console.error(chalk.yellow(`You are using Node ${currentVersion}, which is not recommended. You may encounter issues. To avoid this, install and use Node ${expectedVersion}.`));
+        console.error(chalk.yellow(`You are using Node ${currentVersion}. This code was last tested with Node ${expectedVersion}; use this version if you encounter issues.`));
         process.exit();
     }
 

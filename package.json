@@ -1,6 +1,6 @@
 {
-  "name": "todo-app",
-  "version": "1.0.5",
+  "name": "the-todo-app",
+  "version": "1.1.0",
   "author": "JP",
   "homepage": "https://thetodoapp.com",
   "scripts": {
@@ -13,7 +13,8 @@
     "deploy": "ionic build --prod && npm run compress && firebase deploy --only hosting",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "private": true,
   "dependencies": {

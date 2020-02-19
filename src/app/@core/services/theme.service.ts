@@ -27,7 +27,7 @@ export class ThemeService {
     }
 
     setTheme(theme: Theme) {
-        this.updateDb(genCSSText(theme), theme);
+        if(theme) this.updateDb(genCSSText(theme), theme);
     }
 
     setThemeWithCSS(css: string) {

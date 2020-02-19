@@ -6,6 +6,7 @@ import { AngularFireMessaging } from '@angular/fire/messaging';
 import { DbService } from './db.service';
 import { Observable, of, throwError, } from 'rxjs';
 import { merge, switchMap, map, share, catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({ providedIn: 'root' })
@@ -22,7 +23,7 @@ export class NotificationsService {
         private afMessaging: AngularFireMessaging,
         private db: DbService) {
 
-        this.auth.user$.pipe(
+        if(environment.production) this.auth.user$.pipe(
             switchMap(user => {
                 if (!user) return of(null);
                 this.lastUsedToken = user.deviceToken;

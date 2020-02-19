@@ -75,6 +75,7 @@
                 (click)="theme.useDefault()">Use Default</ion-button>
 
     <ion-radio-group #themeSelector
+                     [value]="theme.activeTheme"
                      (ionChange)="theme.setTheme(themeSelector.value)">
       <ion-row>
 
@@ -83,8 +84,7 @@
           <ion-item lines="full"
                     [style.--background]="t.value.background">
             <ion-label position="stacked">{{ t.key | titlecase }}</ion-label>
-            <ion-radio [checked]="t.key === theme.activeTheme"
-                       [value]="t.key"></ion-radio>
+            <ion-radio [value]="t.key"></ion-radio>
           </ion-item>
         </ion-col>
 

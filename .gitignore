@@ -34,7 +34,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 dist/
-src/environments.prod/
 local-libs/dist/
 local-libs/*.tgz
 .firebase
+
+src/environments/

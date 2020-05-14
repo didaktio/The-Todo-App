@@ -1,2 +1,2 @@
-export { pushReminder } from './notifications';
-export { sendReminderEmail } from './emails';
+export { createReminder } from './create-reminder';
+export { onNewReminder } from './on-new-reminder';

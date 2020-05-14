@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 
 import { ToastController } from '@ionic/angular';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { DbService } from './db.service';
+import { DbService, arrayAdd } from './db.service';
 import { Observable, of, throwError, } from 'rxjs';
 import { merge, switchMap, map, share, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -12,21 +12,21 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
 
-
     private warning: HTMLIonToastElement;
-    private lastUsedToken: string;
+    private userDeviceTokens: string[] = [];
 
 
     constructor(
         private auth: AuthService,
         private toastCtrl: ToastController,
         private afMessaging: AngularFireMessaging,
-        private db: DbService) {
+        private db: DbService
+        ) {
 
-        if(environment.production) this.auth.user$.pipe(
+        if(!environment.production) this.auth.user$.pipe(
             switchMap(user => {
                 if (!user) return of(null);
-                this.lastUsedToken = user.deviceToken;
+                this.userDeviceTokens = user.deviceTokens;
                 return this.notificationPerms$
             }),
         ).subscribe(async (res: { state: string, deviceToken: string }) => {
@@ -45,23 +45,18 @@ export class NotificationsService {
                 }
             }
 
-            if (deviceToken && this.lastUsedToken !== deviceToken) {
-                this.db.updateDb({ deviceToken });
-                this.lastUsedToken = deviceToken;
-            }
-
+            if (deviceToken && this.userDeviceTokens.includes(deviceToken)) this.db.updateDb({ deviceTokens:arrayAdd(deviceToken) });
         });
 
     }
 
-    // TODO ERROR
+    // TODO: graceful error handling
     private notificationPerms$ = new Observable(observer => {
         (window.navigator as any).permissions.query({ name: 'notifications' }).then(permission => {
             observer.next({ state: permission.state });
             permission.onchange = ev => observer.next({ state: (ev.target as any).state });
         }).catch(error => observer.error(error))
     }).pipe(
-        //TODO MOVE ERROR TO INNER-MOST
         merge(this.afMessaging.tokenChanges.pipe(
             map(token => ({ deviceToken: token })),
             catchError(error => throwError({ error }))

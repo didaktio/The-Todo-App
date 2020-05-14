@@ -4,12 +4,12 @@ import { ToastController, ModalController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-import { of, Observable } from 'rxjs';
-import { tap, first, switchMap, map, shareReplay } from 'rxjs/operators';
+import { of, Observable, throwError, timer } from 'rxjs';
+import { tap, first, switchMap, shareReplay, retryWhen, delayWhen } from 'rxjs/operators';
 
 import { LoginComponent } from '../../login/login.component';
 import { SignupComponent } from '../../signup/signup.component';
-import { TodoUser } from 'utils';
+import { UserDocument } from 'utils';
 
 
 @Injectable({ providedIn: 'root' })
@@ -28,33 +28,39 @@ export class AuthService {
 
     loggedIn: boolean;
     name: string;
+    uid: string;
+    email: string;
     user$ = this.afAuth.authState.pipe(
         tap(user => {
-            if (user) this.loggedIn = true;
+            if (user) {
+                this.loggedIn = true;
+                this.uid = user.uid;
+                this.email = user.email;
+            }
             else this.loggedIn = false;
         }),
         switchMap(user => user ? this.afs.doc(`users/${user.uid}`).snapshotChanges().pipe(
-            map(doc => doc.payload.data() as TodoUser),
-            tap(user => this.name = user.general.name)
+            switchMap(doc => doc ? of(doc.payload.data() as UserDocument)
+                : throwError('Database Error: User is authenticated but their data could not be successfully grabbed.'))
         ) : of(null)),
+        retryWhen(error => error.pipe(
+            tap(e => console.error(e)),
+            delayWhen(() => timer(1000))
+        )),
         shareReplay()
-    ) as Observable<TodoUser>;
+    ) as Observable<UserDocument>;
 
-
-    get uid() {
-        return this.afAuth.auth.currentUser.uid;
-    }
 
     isLoggedIn() {
         return this.user$.pipe(first()).toPromise();
     }
 
     login(email: string, password: string) {
-        return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+        return this.afAuth.signInWithEmailAndPassword(email, password);
     }
 
     logout() {
-        return this.afAuth.auth.signOut();
+        return this.afAuth.signOut();
     }
 
     async openSignup() {
@@ -98,14 +104,13 @@ export class AuthService {
     }
 
     async sendPasswordResetEmail() {
-        const email = this.afAuth.auth.currentUser.email;
-        if (!email) return console.error('No email found. If user is not logged in, an email argument must be provided.');
+        if (!this.email) return console.error('No email found. If user is not logged in, an email argument must be provided.');
         try {
-            await this.afAuth.auth.sendPasswordResetEmail(email);
+            await this.afAuth.sendPasswordResetEmail(this.email);
         } catch (error) {
             return error;
         }
-        return email;
+        return this.email;
     }
 
 }

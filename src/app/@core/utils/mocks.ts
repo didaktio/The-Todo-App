@@ -8,8 +8,8 @@ export const TODOS_MOCK: TodoItem[] = [
     {
         title: 'Email Emily',
         notes: 'Inform about nxt weeks appointment, say hi to family',
-        dateAdded: subDays(today, 1).toISOString(),
-        dateDue: {
+        created: subDays(today, 1).toISOString(),
+        deadline: {
             date: addDays(today, 2).toISOString()
         },
         highPriority: true,
@@ -25,7 +25,7 @@ export const TODOS_MOCK: TodoItem[] = [
     {
         title: 'Purchase party present for Preston ',
         notes: 'He likes dark choc and bordeaux',
-        dateAdded: subDays(today, 2).toISOString(),
+        created: subDays(today, 2).toISOString(),
         highPriority: true,
         history: [],
         id: genID(),
@@ -34,7 +34,7 @@ export const TODOS_MOCK: TodoItem[] = [
     {
         title: `Send Sean's soccer subs`,
         notes: '£15 per month, £40 for 3 months',
-        dateAdded: today.toISOString(),
+        created: today.toISOString(),
         history: [],
         id: genID(),
         reminders: []
@@ -42,8 +42,8 @@ export const TODOS_MOCK: TodoItem[] = [
     {
         title: 'Apply for Acting Audition',
         notes: 'Application is £5, auditions are in Greenwood, filming is global!!',
-        dateAdded: subDays(today, 5).toISOString(),
-        dateDue: {
+        created: subDays(today, 5).toISOString(),
+        deadline: {
             date: addDays(today, 10).toISOString()
         },
         history: [],

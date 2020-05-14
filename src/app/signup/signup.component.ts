@@ -40,15 +40,17 @@ export class SignupComponent implements OnInit {
   }
 
   private async createUser({email, password, name}) {
-    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    const { user } = await this.afAuth.createUserWithEmailAndPassword(email, password);
 
-    const template = USER_TEMPLATE;
-    template.general.email = email;
-    template.general.name = name;
-    template.general.uid = user.uid;
+    const document = USER_TEMPLATE;
+    document.email = email;
+    document.name = name;
+    document.uid = user.uid;
+    document.id = user.uid;
+    document.path = `users/${user.uid}`;
     //TODO ERROR
 
-    await this.afs.doc(`users/${user.uid}`).set(template);
+    await this.afs.doc(document.path).set(document);
 
     return user;
   }
@@ -71,8 +73,8 @@ export class SignupComponent implements OnInit {
           break;
         default: this.error = `An error has occurred.
         The cause could be rebellious monkeys.
-        Try: 
-        <ul>        
+        Try:
+        <ul>
         <li>trying again</li>
         <li>refreshing the page</li>
         <li>resetting your password</li>

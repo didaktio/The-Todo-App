@@ -32,7 +32,7 @@
         <ion-button size="small"
                     color="dark"
                     (click)="resetPassword()">
-          Reset Password
+          Password Reset
         </ion-button>
         <ion-note *ngIf="resetPasswordRes">{{resetPasswordRes}}</ion-note>
       </div>
@@ -68,12 +68,6 @@
   <div class="theme">
     <h5>Theme</h5>
 
-    <ion-button *ngIf="theme.activeTheme"
-                class="default-btn"
-                fill="clear"
-                size="small"
-                (click)="theme.useDefault()">Use Default</ion-button>
-
     <ion-radio-group #themeSelector
                      [value]="theme.activeTheme"
                      (ionChange)="theme.setTheme(themeSelector.value)">
@@ -103,8 +97,8 @@
            hidden
            type="file"
            accept=".zip"
-           (change)="importData(dataFileInput.files)">
-    <ion-button (click)="dataFileInput.click()">Import Data</ion-button>
+           (change)="importData(dataFileInput)">
+    <ion-button (click)="dataFileInput.click()">Import Data (.zip)</ion-button>
   </div>
 
   <ion-button color="danger"

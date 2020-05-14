@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, PopoverController, ModalController } from '@ionic/angular';
+import { Platform, PopoverController, ModalController, AlertController } from '@ionic/angular';
 
 import { TrashComponent } from './trash/trash.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -27,7 +27,9 @@ export class AppComponent {
     public theme: ThemeService,
     public auth: AuthService,
     public notifications: NotificationsService,
-    private swUpdate: SwUpdate) {
+    private swUpdate: SwUpdate,
+    private alertCtrl: AlertController
+    ) {
 
     this.initializeApp();
   }
@@ -64,6 +66,16 @@ export class AppComponent {
     });
     modal.present();
   }
+
+  async openSupport() {
+    const modal = await this.alertCtrl.create({
+      header: 'Contact the Team',
+      message: `If you have feedback or a question or technical problem, please send us an email at <strong>contact@thetodoapp.com</strong>.`,
+      buttons: ['Close']
+    });
+    await modal.present();
+  }
+
 
 
   async logout() {

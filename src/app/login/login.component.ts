@@ -37,13 +37,13 @@ export class LoginComponent implements OnInit {
   }
 
   login({email, password}) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    return this.afAuth.signInWithEmailAndPassword(email, password);
   }
 
   async submit({ email, password }) {
     if(this.form.invalid) return this.error = 'Something is wrong. Please try re-typing your details.';
 
-  
+
     const loading = await this.loadingCtrl.create();
     loading.present();
 
@@ -60,8 +60,8 @@ export class LoginComponent implements OnInit {
           break;
         default: this.error = `An error has occurred.
           The cause could be rebellious monkeys.
-          Try: 
-          <ul>        
+          Try:
+          <ul>
           <li>trying again</li>
           <li>refreshing the page</li>
           <li>resetting your password</li>
@@ -95,7 +95,7 @@ export class LoginComponent implements OnInit {
               error = false;
 
             try {
-              await this.afAuth.auth.sendPasswordResetEmail(email);
+              await this.afAuth.sendPasswordResetEmail(email);
 
             } catch ({ code }) {
               error = true;

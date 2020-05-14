@@ -7,9 +7,9 @@
         autocomplete="off">
     <ion-item>
       <ion-label position="floating">Name</ion-label>
-      <ion-input type="email"
-                 formControlName="email"
-                 debounce="1000"></ion-input>
+      <ion-input type="text"
+                 formControlName="name"
+                 debounce="750"></ion-input>
       <ion-note color="danger"
                 *ngIf="name.invalid && name.value">Please enter a valid Name</ion-note>
     </ion-item>
@@ -17,7 +17,8 @@
       <ion-label position="floating">Email <ion-note color="danger">*</ion-note>
       </ion-label>
       <ion-input formControlName="email"
-                 debounce="1000"></ion-input>
+                 debounce="750"
+                 type="email"></ion-input>
       <ion-note color="danger"
                 *ngIf="email.invalid && email.value">Please enter a valid Email</ion-note>
     </ion-item>

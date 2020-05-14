@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from './auth.service';
 import { DbService, arrayAdd, arrayRemove } from './db.service';
-import { TodoItem, TodoUser } from 'utils';
+import { TodoItem, UserDocument } from 'utils';
 
 import { map, first, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, of, Observable } from 'rxjs';
+import { ToastService } from './toast.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -13,10 +14,9 @@ export class TodosService {
 
   constructor(
     private auth: AuthService,
-    private db: DbService) {
-
-    // db.updateDb({ todos: { pending: TODOS_MOCK } })
-
+    private db: DbService,
+    private toast: ToastService
+  ) {
   }
 
   sortItemsBy$ = new BehaviorSubject<SortOption>('Date Due');
@@ -32,8 +32,8 @@ export class TodosService {
     })) as Observable<TodoItem[]>;
   trash$ = this.auth.user$.pipe(map(user => user ? user.trash : null));
 
-  add(item: TodoItem) {
-    return this.db.updateDb({
+  async add(item: Partial<TodoItem>) {
+    await this.db.updateDb({
       todos: {
         pending: arrayAdd({
           ...item,
@@ -44,19 +44,21 @@ export class TodosService {
         reminders: arrayAdd(...item.reminders.map(r => r.date))
       } : false
     });
+    this.toast.present('Todo item added.');
   }
 
   async replace(before: TodoItem, after: TodoItem) {
+    console.log({before, after})
     const list = await this.auth.user$.pipe(
       map(user => before.complete ? user.todos.completed : user.todos.pending),
       first()
     ).toPromise();
 
-    const index = list.findIndex(t => t === before);
-    list.splice(index, 1, after);
+    list.splice(list.findIndex(x => x.id === before.id), 1, after);
 
     return this.db.updateDb({
       todos: { [before.complete ? 'complete' : 'pending']: list },
+
       ...(!before.reminders.length && after.reminders.length) ? {
         reminders: arrayAdd(...after.reminders.map(r => r.date))
       } : (before.reminders.length && !after.reminders.length) ? {
@@ -68,6 +70,7 @@ export class TodosService {
 
   delete(item: TodoItem) {
     return this.db.updateDb({
+      ...item.reminders.length ? { reminders: arrayRemove(...item.reminders.map(r => r.date)) } : false,
       todos: {
         pending: arrayRemove(item),
         completed: arrayRemove(item),
@@ -78,6 +81,7 @@ export class TodosService {
 
   async complete(item: TodoItem) {
     return this.db.updateDb({
+      ...item.reminders.length ? { reminders: arrayRemove(...item.reminders.map(r => r.date)) } : false,
       todos: {
         pending: arrayRemove(item),
         completed: arrayAdd({
@@ -88,8 +92,9 @@ export class TodosService {
     });
   }
 
-  async uncomplete(item: TodoItem){
+  async uncomplete(item: TodoItem) {
     return this.db.updateDb({
+      ...item.reminders.length ? { reminders: arrayAdd(...item.reminders.map(r => r.date)) } : false,
       todos: {
         completed: arrayRemove(item),
         pending: arrayAdd({
@@ -103,7 +108,8 @@ export class TodosService {
   restoreFromTrash(item: TodoItem) {
     return this.db.updateDb({
       trash: arrayRemove(item),
-      todos: { [item.complete ? 'completed' : 'pending']: arrayAdd(item) }
+      todos: { [item.complete ? 'completed' : 'pending']: arrayAdd(item) },
+      ...item.reminders.length ? { reminders: arrayAdd(...item.reminders.map(r => r.date)) } : false
     });
   }
 
@@ -120,7 +126,7 @@ export class TodosService {
     return current.concat(merged);
   }
 
-  async setTodos(todos: TodoUser['todos'], { merge } = { merge: false }) {
+  async setTodos(todos: UserDocument['todos'], { merge } = { merge: false }) {
     if (!merge) return this.db.updateDb({ todos });
     else {
       const currentTodos = await this.auth.user$.pipe(map(user => user.todos), first()).toPromise();
@@ -157,9 +163,9 @@ export type SortOption = typeof SORT_OPTIONS[number];
 const sortList = (items: TodoItem[], sorter: SortOption) => {
   switch (sorter) {
     case 'Date Due': return items.sort((a, b) =>
-      (b.dateDue && a.dateDue) ? new Date(a.dateDue.date).getTime() - new Date(b.dateDue.date).getTime() : +!!b.dateDue - +!!a.dateDue);
+      (b.deadline && a.deadline) ? new Date(a.deadline.date).getTime() - new Date(b.deadline.date).getTime() : +!!b.deadline - +!!a.deadline);
     case 'Last Edited': return items.sort((a, b) =>
       (b.lastEdited && a.lastEdited) ? new Date(b.lastEdited).getTime() - new Date(a.lastEdited).getTime() : +!!b.lastEdited - +!!a.lastEdited);
-    case 'Date Added': return items.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+    case 'Date Added': return items.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
   }
 }

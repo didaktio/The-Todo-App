@@ -3,9 +3,8 @@ import { DOCUMENT } from '@angular/common';
 
 import * as Color from 'color';
 import { AuthService } from './auth.service';
-import { TodoUser } from 'utils';
+import { UserDocument } from 'utils';
 import { DbService } from './db.service';
-
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -27,28 +26,23 @@ export class ThemeService {
     }
 
     setTheme(theme: Theme) {
-        if(theme) this.updateDb(genCSSText(theme), theme);
+        if(theme) {
+            if(theme === 'light') this.setThemeWithCSS('', 'light');
+            else this.setThemeWithCSS(genCSSText(theme), theme);
+        }
     }
 
-    setThemeWithCSS(css: string) {
-        this.updateDb(css);
-    }
-
-    private updateDb(css: string, theme: Theme | '' = '') {
+    setThemeWithCSS(css: string, theme: Theme) {
         return this.db.updateDb({
             settings: {
                 css,
                 theme
             }
-        } as TodoUser);
+        } as UserDocument);
     }
 
     private applyCSS(css: string) {
         this.document.documentElement.style.cssText = css;
-    }
-
-    useDefault() {
-        this.setThemeWithCSS('');
     }
 }
 
@@ -124,7 +118,7 @@ const genCSSText = (theme: Theme) => {
     --ion-background-color: ${background};
     --ion-text-color: ${text};
     --ion-border-color: ${border}
-  
+
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${toRGBString(primary)};
     --ion-color-primary-contrast: ${getColorContrast(primary)};
@@ -152,14 +146,14 @@ const genCSSText = (theme: Theme) => {
     --ion-color-dark-contrast-rgb: ${toRGBString(dark)};
     --ion-color-dark-shade: ${Color(dark).darken(ratioShade)};
     --ion-color-dark-tint: ${Color(dark).lighten(ratioTint)};
-    
+
     --ion-color-medium: ${medium};
     --ion-color-medium-rgb: ${toRGBString(medium)};
     --ion-color-medium-contrast: ${getColorContrast(medium)};
     --ion-color-medium-contrast-rgb: ${toRGBString(medium)};
     --ion-color-medium-shade: ${Color(medium).darken(ratioShade)};
     --ion-color-medium-tint: ${Color(medium).lighten(ratioTint)};
-    
+
     --ion-color-light: ${light};
     --ion-color-light-rgb: ${toRGBString(light)};
     --ion-color-light-contrast: $${getColorContrast(light)};

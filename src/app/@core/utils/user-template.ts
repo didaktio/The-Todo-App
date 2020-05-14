@@ -1,27 +1,28 @@
-import { TodoUser } from 'utils';
+import { UserDocument } from 'utils';
 
 export const USER_TEMPLATE = {
+    object: 'user',
+    name: '',
+    email: '',
+    uid: '',
+    path: '',
+    id: '',
+    preferences: {
+        reminders: {
+            emails: true,
+            notifications: true
+        }
+    },
     todos: {
         pending: [],
         completed: []
     },
     trash: [],
-    general: {
-        name,
-        email: '',
-        uid: '',
-        preferences: {
-            reminders: {
-                emails: true,
-                notifications: true
-            }
-        }
-    },
     settings: {
         theme: null,
         css: null,
     },
-    createdAt: new Date(),
+    created: new Date().toISOString(),
     reminders: [],
-    deviceToken: ''
-} as TodoUser;
+    deviceTokens: []
+} as UserDocument;

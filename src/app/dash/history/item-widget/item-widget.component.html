@@ -11,6 +11,6 @@
     <span [ngClass]="{'high-priority': i.highPriority}">{{ i.highPriority ? 'High' : 'Normal' }}</span>
   </div>
 
-  <div *ngIf="i.dateDue"><span>By: </span>{{ formatDateShort(i.dateDue.date) }}</div>
+  <div *ngIf="i.deadline"><span>Deadline: </span>{{ formatDateShort(i.deadline.date) }}</div>
 
 </div>

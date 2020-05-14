@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.1.1",
+  "version": "1.1.16",
   "description": "Shared interfaces and methods between server and app environments.",
   "main": "index",
   "types": "index",
@@ -8,8 +8,8 @@
   "scripts": {
     "build": "tsc && cp package.json dist && cd dist && npm pack && mv *.tgz ../utils.tgz",
     "installApp": "cd ../ && npm i ./utils/utils.tgz",
-    "installFunctions": "cd ../functions && mkdir -p src/utils/ && cp ../utils/utils.tgz src/utils/ && npm i ./src/utils/*.tgz && rm package-lock.json",
-    "deploy": "npm version patch && npm run build && npm run installApp && npm run installFunctions"
+    "installFunctions": "cd ../functions && mkdir -p src/utils/ && cp ../utils/utils.tgz . && npm i utils.tgz",
+    "deploy": "npm version patch && (rm -r dist || true) && npm run build && npm run installApp && npm run installFunctions"
   },
   "dependencies": {
     "date-fns": "^2.8.0"

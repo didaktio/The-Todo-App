@@ -1,6 +1,7 @@
 <ion-app>
 
-  <ion-menu contentId="main" side="end">
+  <ion-menu contentId="main"
+            side="end">
 
     <ion-header>
       <ion-toolbar>
@@ -12,7 +13,8 @@
 
       <ion-menu-toggle>
 
-        <ion-item lines="full" button
+        <ion-item lines="full"
+                  button
                   (click)="openReminders()">
           <ion-icon slot="start"
                     color="dark"
@@ -38,6 +40,14 @@
           <fa-icon [icon]="['fas', 'sliders-h']"
                    size="lg"></fa-icon>
           <ion-label>Settings</ion-label>
+        </ion-item>
+
+        <ion-item button
+                  (click)="openSupport()">
+          <ion-icon slot="start"
+                    color="dark"
+                    name="help"></ion-icon>
+          <ion-label>Help</ion-label>
         </ion-item>
 
 

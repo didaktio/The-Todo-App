@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, LoadingController } from '@ionic/angular';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { ThemeService } from '../@core/services/theme.service';
 import { TodosService } from '../@core/services/todos.service';
@@ -14,6 +13,8 @@ import { TodoItem } from 'utils';
 import { USER_TEMPLATE } from '../@core/utils/user-template';
 import { DbService } from '../@core/services/db.service';
 import { NgForm } from '@angular/forms';
+import { ToastService } from '../@core/services/toast.service';
+import { formatDateLong } from 'utils/src';
 
 
 @Component({
@@ -27,29 +28,30 @@ export class SettingsComponent implements OnInit {
     private alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public theme: ThemeService,
-    private sanitizer: DomSanitizer,
     private todos: TodosService,
     private loadingCtrl: LoadingController,
     private auth: AuthService,
-    private db: DbService) { }
+    private db: DbService,
+    private toast: ToastService
+    ) { }
 
   dataError: string;
   data$ = this.auth.user$.pipe(
-    map(user => user ? ({ ...user.general, ...user.settings }) : null));
+    map(user => user ? ({ ...user, ...user.settings }) : null));
 
   ngOnInit() { }
 
   updateReminderEmails(emails: boolean) {
-    this.db.updateDb({ general: { preferences: { reminders: { emails } } } });
+    this.db.updateDb({ preferences: { reminders: { emails } } });
   }
 
   updateReminderNots(notifications: boolean) {
-    this.db.updateDb({ general: { preferences: { reminders: { notifications } } } });
+    this.db.updateDb({ preferences: { reminders: { notifications } } });
   }
 
   updateGeneralRes: string;
   async updateGeneral(form: NgForm) {
-    await this.db.updateDb({ general: form.value });
+    await this.db.updateDb(form.value);
     form.form.markAsPristine();
     this.updateGeneralRes = 'Changes Saved!';
   }
@@ -141,7 +143,7 @@ export class SettingsComponent implements OnInit {
             const zip = new JSZip(),
               parent = 'The Todo App';
 
-            zip.file(`${parent}/metadata.txt`, JSON.stringify({ name: data.general.name, joined: (data.createdAt as any).toDate() }))
+            zip.file(`${parent}/metadata.txt`, JSON.stringify({ name: data.name, joined: formatDateLong(data.created) }))
 
             if (options.includes('todos')) {
               for (const t of data.todos.completed) zip.folder(`${parent}/todos/completed`).file(`${t.title}.txt`, JSON.stringify(t));
@@ -170,13 +172,13 @@ export class SettingsComponent implements OnInit {
     alert.present();
   }
 
-  async importData(data: FileList) {
-    if (!data.length) return;
+  async importData(dataFileInput: HTMLInputElement) {
+    if (!dataFileInput.files.length) return;
 
     const loading = await this.loadingCtrl.create();
     await loading.present();
 
-    const { files } = await JSZip().loadAsync(data[0]);
+    const { files } = await JSZip().loadAsync(dataFileInput.files[0]);
 
     const todos = {
       pending: [] as TodoItem[],
@@ -198,8 +200,8 @@ export class SettingsComponent implements OnInit {
 
     if (!todos.pending.length && !todos.completed.length && !trash.length && !themeCss) {
       this.dataError = 'Imported data is invalid or contains no files to apply.';
+      dataFileInput.value = '';
       return false;
-
     }
 
     const alert = await this.alertCtrl.create({
@@ -207,9 +209,9 @@ export class SettingsComponent implements OnInit {
       message: `
       Data found:
       <ul>
-       ${todos.completed.length || todos.pending.length ? `<li>Todo items (${todos.pending.length + todos.completed.length})</li>` : ''} 
-       ${trash.length ? `<li>Deleted items (${trash.length})</li>` : ''} 
-       ${themeCss ? `<li>Customised theme</li>` : ''} 
+       ${todos.completed.length || todos.pending.length ? `<li>Todo items (${todos.pending.length + todos.completed.length})</li>` : ''}
+       ${trash.length ? `<li>Deleted items (${trash.length})</li>` : ''}
+       ${themeCss ? `<li>Customised theme</li>` : ''}
       </ul>
       <h3>Apply data?</h3>
       `,
@@ -232,12 +234,16 @@ export class SettingsComponent implements OnInit {
 
             if (todos.pending.length || todos.completed.length) this.todos.setTodos(todos, extras);
             if (trash.length) this.todos.setTrash(trash, extras);
-            if (themeCss) this.theme.setThemeWithCSS(themeCss);
+            if (themeCss) this.theme.setThemeWithCSS(themeCss, '' as any);
+
+            this.toast.present('Date successfully imported');
           }
         }
       ]
     });
-    alert.present();
+    await alert.present();
+    await alert.onDidDismiss();
+    dataFileInput.value = '';
   }
 }
 

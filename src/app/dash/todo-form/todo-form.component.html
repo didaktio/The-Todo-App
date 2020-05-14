@@ -16,25 +16,25 @@
       <ion-textarea formControlName="notes"></ion-textarea>
     </ion-item>
 
-    <ion-item formGroupName="dateDue">
-      <ion-label position="floating">By When</ion-label>
+    <ion-item formGroupName="deadline">
+      <ion-label position="floating">Deadline</ion-label>
       <ion-datetime formControlName="date"
-                    [displayFormat]="withTime ? 'D MMM YYYY, H:mm a' : 'D MMM YYYY'"></ion-datetime>
+                    [displayFormat]="hasTime ? 'D MMM YYYY, H:mm a' : 'D MMM YYYY'"></ion-datetime>
       <div class="datetime-btns"
            slot="end">
-        <ion-button *ngIf="dateDueDate.value"
+        <ion-button *ngIf="deadlineDate.value"
                     class="clear-datetime-btn"
                     fill="clear"
                     (click)="clearDatetime(); $event.stopPropagation()">
           Clear
         </ion-button>
-        <ion-button *ngIf="dateDueDate.value && !withTime"
+        <ion-button *ngIf="deadlineDate.value && !hasTime"
                     class="add-time-btn"
                     fill="clear"
                     (click)="timePicker.open(); $event.stopPropagation()">
           Add Time
         </ion-button>
-        <ion-button *ngIf="withTime"
+        <ion-button *ngIf="hasTime"
                     class="rm-time-btn"
                     fill="clear"
                     (click)="removeTime(); $event.stopPropagation()">
@@ -54,9 +54,10 @@
                     formControlName="highPriority"></ion-checkbox>
     </ion-item>
 
-    <ion-item *ngIf="withTime">
+    <ion-item *ngIf="hasTime">
       <ion-label>Send Reminder</ion-label>
       <ion-checkbox #showRemindersCheckbox
+                    [checked]="showReminders"
                     (ionChange)="sendRemindersClicked(showRemindersCheckbox)"></ion-checkbox>
     </ion-item>
 
@@ -65,33 +66,11 @@
          formGroupName="reminders">
 
       <h5>Reminders</h5>
-      <div class="option">
-        <ion-checkbox formControlName="minutes10"></ion-checkbox>
-        <span>10 Minutes</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="minutes30"></ion-checkbox>
-        <span>30 Minutes</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="hours1"></ion-checkbox>
-        <span>1 Hour</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="hours2"></ion-checkbox>
-        <span>2 Hour</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="days1"></ion-checkbox>
-        <span>1 Day</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="days2"></ion-checkbox>
-        <span>2 Day</span>
-      </div>
-      <div class="option">
-        <ion-checkbox formControlName="minutes0"></ion-checkbox>
-        <span>On the Dot</span>
+      <div *ngFor="let rc of reminders.controls | keyvalue"
+           class="option">
+        <ion-checkbox [formControlName]="rc.key"></ion-checkbox>
+        <span *ngIf="rc.key !== '0_minute'; else onTheDot">{{rc.key.replace('_', ' ') | titlecase}}</span>
+        <ng-template #onTheDot>On the dot</ng-template>
       </div>
     </div>
 

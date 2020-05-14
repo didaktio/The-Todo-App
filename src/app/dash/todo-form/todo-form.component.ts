@@ -1,12 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PopoverController, IonCheckbox } from '@ionic/angular';
-import { EditTodoFormData, TodoItem } from 'utils';
+import { TodoItem } from 'utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { subMinutes, subHours, subDays, isFuture } from 'date-fns/esm';
+import { Deadline } from 'utils/src';
 
+export interface EditTodoFormData {
+  title: string;
+  notes: string;
+  deadline?: Deadline;
+  highPriority: boolean;
+  reminders: any;
+}
 
 type Period = 'minutes' | 'hours' | 'days';
-type Reminder = {title: string; date: Date};
+type Reminder = { title: string; date: Date };
 
 @Component({
   selector: 'todo-form',
@@ -23,26 +31,32 @@ export class TodoFormComponent implements OnInit {
   todoForm = this.fb.group({
     title: [''],
     notes: [''],
-    dateDue: this.fb.group({
+    deadline: this.fb.group({
       date: [''],
-      withTime: ['']
+      hasTime: ['']
     }),
     highPriority: false,
     reminders: this.fb.group({
-      minutes0: false,
-      minutes10: false,
-      minutes30: false,
-      hours1: false,
-      hours2: false,
-      days1: false,
-      days2: false
+      '0_minute': false,
+      '10_minute': false,
+      '30_minute': false,
+      '1_hour': false,
+      '2_hour': false,
+      '1_day': false,
+      '2_day': false
     })
   });
 
   showReminders: boolean;
 
   ngOnInit() {
-    if (this.item) this.todoForm.patchValue(this.item);
+    if (this.item) {
+      this.todoForm.patchValue(this.item);
+      if (this.item.reminders.length) {
+        this.reminders.patchValue(this.item.reminders.reduce((acc, cur) => ({ ...acc, [cur.title.replace(' ', '_')]: true }), {}));
+        this.showReminders = true;
+      }
+    }
   }
 
   get title() {
@@ -54,24 +68,23 @@ export class TodoFormComponent implements OnInit {
   get highPriority() {
     return this.todoForm.get('highPriority');
   }
-  get dateDue() {
-    return this.todoForm.get('dateDue') as FormGroup;
+  get deadline() {
+    return this.todoForm.get('deadline') as FormGroup;
   }
-  get dateDueDate() {
-    return this.dateDue.get('date');
+  get deadlineDate() {
+    return this.deadline.get('date');
   }
-  get withTime() {
-    return this.dateDue.get('withTime').value;
+  get hasTime() {
+    return this.deadline.get('hasTime').value;
   }
   get reminders() {
     return this.todoForm.get('reminders') as FormGroup;
   }
 
-
   sendRemindersClicked(el: IonCheckbox) {
     if (el.checked) {
-      this.reminders.get('minutes0').setValue(true);
-      this.reminders.get('hours1').setValue(true);
+      this.reminders.get('0_minute').setValue(true);
+      this.reminders.get('1_hour').setValue(true);
       this.showReminders = true;
     }
     else {
@@ -84,56 +97,31 @@ export class TodoFormComponent implements OnInit {
     this.popoverCtrl.dismiss(undefined, 'cancel');
   }
 
-
-  save(formData: EditTodoFormData) {
-    // Remove empty properties
-    const data = this.removeEmptyProps(formData) as EditTodoFormData;
-
-    if (data.dateDue) {
+  save(data: EditTodoFormData) {
+    if (data.deadline) {
       // If no time is set, change minutes and seconds to 0.
-      if(!data.dateDue.withTime) data.dateDue.date = this.zerofyDatetime(data.dateDue.date);
+      if (!data.deadline.hasTime) data.deadline.date = this.zerofyDatetime(data.deadline.date);
 
       else {
-        const dateDue = new Date(data.dateDue.date);
-        dateDue.setSeconds(0);
-        dateDue.setMilliseconds(0);
-  
+        const deadline = new Date(data.deadline.date);
+        deadline.setSeconds(0);
+        deadline.setMilliseconds(0);
+
         const reminders = [] as Reminder[];
         for (const key in data.reminders) if (data.reminders[key]) {
-          const _ = key.split(/[0-9]/),
-           period = _[0] as Period,
-           amount = +_[1];
-
-           switch (period) {
-            case 'minutes': reminders.push({
-              title: `${amount} ${period}`,
-              date: subMinutes(dateDue, amount)
-            });
-              break;
-            case 'hours': reminders.push({
-              title: `${amount} ${period}`,
-              date: subHours(dateDue, amount)
-            });
-              break;
-            case 'days': reminders.push({
-              title: `${amount} ${period}`,
-              date: subDays(dateDue, amount)
-            });
-          }
-
+          const [amount, period] = key.split('_');
+          reminders.push({
+            title: `${amount} ${period}`,
+            date: period === 'minute' ? subMinutes(deadline, +amount)
+              : period === 'hour' ? subHours(deadline, +amount)
+                : subDays(deadline, +amount)
+          });
         }
-        data.reminders = reminders.filter(r => isFuture(r.date)).map(({date, title}) => ({date: date.toISOString(), title}));
-      }
-    } 
-    this.popoverCtrl.dismiss(data);
-  }
 
-  private removeEmptyProps(obj: Object): { [key: string]: any } {
-    Object.keys(obj).forEach(key => {
-      if (obj[key] == '') delete obj[key];
-      else if (typeof obj[key] == 'object' && !Object.values(obj[key]).filter(Boolean).length) delete obj[key];
-    });
-    return obj;
+        data.reminders = reminders.filter(r => isFuture(r.date)).map(({ date, title }) => ({ date: date.toISOString(), title })) as any;
+      }
+    }
+    this.popoverCtrl.dismiss(data);
   }
 
   zerofyDatetime(date: string) {
@@ -146,30 +134,30 @@ export class TodoFormComponent implements OnInit {
 
   addTime(time: string) {
     const timeAsDate = new Date(time);
-    const merged = new Date(this.dateDueDate.value);
+    const merged = new Date(this.deadlineDate.value);
 
     merged.setHours(timeAsDate.getHours());
     merged.setMinutes(timeAsDate.getMinutes());
 
-    this.dateDue.patchValue({
+    this.deadline.patchValue({
       date: merged.toISOString(),
-      withTime: true
+      hasTime: true
     });
     this.todoForm.markAsDirty();
   }
 
   removeTime() {
-    this.dateDue.patchValue({
-      date: this.zerofyDatetime(this.dateDueDate.value),
-      withTime: false
+    this.deadline.patchValue({
+      date: this.zerofyDatetime(this.deadlineDate.value),
+      hasTime: false
     });
     this.todoForm.markAsDirty();
   }
 
   clearDatetime() {
-    this.dateDue.patchValue({
+    this.deadline.patchValue({
       date: '',
-      withTime: ''
+      hasTime: ''
     });
     this.todoForm.markAsDirty();
   }

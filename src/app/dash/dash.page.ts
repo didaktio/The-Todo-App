@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-
 import { AlertController, PopoverController } from '@ionic/angular';
-
-import { TodoFormComponent } from './todo-form/todo-form.component';
+import { TodoFormComponent, EditTodoFormData } from './todo-form/todo-form.component';
 import { HistoryComponent } from './history/history.component';
-import { TodoItem, EditTodoFormData } from 'utils';
-import { formatDateShort, formatDateLong } from 'utils';
+import { TodoItem, formatDateShort, formatDateLong } from 'utils';
 import { TodosService, SortOption, SORT_OPTIONS } from '../@core/services/todos.service';
 import { AuthService } from '../@core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { map, first } from 'rxjs/operators';
-
+import { Timestamp } from '../@core/services/db.service';
 
 const FILTER_OPTIONS = [
   { label: 'Complete', key: 'complete' },
   { label: 'High Priority', key: 'highPriority' },
-  { label: 'With Due Date', key: 'dateDue' },
+  { label: 'With Due Date', key: 'deadline' },
   { label: 'Edited', key: 'lastEdited' }
 ] as const;
 type FilterOption = typeof FILTER_OPTIONS[number];
@@ -32,7 +29,8 @@ export class DashPage implements OnInit {
     private popoverCtrl: PopoverController,
     public todos: TodosService,
     public auth: AuthService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute
+  ) { }
 
   formatDateShort = formatDateShort;
   formatDateLong = formatDateLong;
@@ -45,7 +43,7 @@ export class DashPage implements OnInit {
   showFilterOptions = false;
 
   showSettingsToolbar = false;
-  
+
   // TODO SHOW OPENING
   async ngOnInit() {
     const todoId = this.route.snapshot.queryParamMap.get('todo');
@@ -53,7 +51,7 @@ export class DashPage implements OnInit {
       const item = await this.todos.items$.pipe(
         map(items => items.find(i => i.id === todoId)),
         first()).toPromise();
-        this.openTodoDetails(item);
+      this.openTodoDetails(item);
     }
   }
 
@@ -62,16 +60,16 @@ export class DashPage implements OnInit {
       header: item.title,
       message: `
 
-      ${item.notes ? `      
+      ${item.notes ? `
       <strong>Notes:</strong>
       <div>${item.notes}<div>
       <br>` : ''}
 
-      <strong>Date Added:</strong> ${this.formatDateLong(item.dateAdded)}
+      <strong>Created:</strong> ${this.formatDateLong(item.created)}
       <br>
 
-      ${item.dateDue ? `
-      <strong>Date Due:</strong> ${item.dateDue.withTime ? this.formatDateLong(item.dateDue.date) : this.formatDateShort(item.dateDue.date)}
+      ${item.deadline ? `
+      <strong>Deadline:</strong> ${item.deadline.hasTime ? this.formatDateLong(item.deadline.date) : this.formatDateShort(item.deadline.date)}
       <br>
       ` : ''}
 
@@ -125,7 +123,8 @@ export class DashPage implements OnInit {
     const popover = await this.popoverCtrl.create({
       component: TodoFormComponent,
       componentProps: { item },
-      cssClass: 'popover todo-form'
+      cssClass: 'popover todo-form',
+      backdropDismiss: false
     });
     await popover.present();
 
@@ -133,23 +132,21 @@ export class DashPage implements OnInit {
 
     if (role == 'cancel' || !data) return;
 
-    // If item is available, user is EDITING todo item
+    // If item has been passed then the user is EDITING todo item; else they are adding.
     if (item) {
-      const updated = {
-        lastEdited: new Date().toISOString(),
-        history: item.history.concat({
-          ...item,
-          changeMade: new Date().toISOString(),
-        }),
-        ...item,
-        ...data
-      };
-      this.todos.replace(item, updated);
+      const { history = [], ...i } = item;
+      this.todos.replace(item, {
+        ...i,
+        ...data,
+        lastEdited: Timestamp(),
+        history: history.concat({
+          ...i,
+          changeMade: Timestamp(),
+        } as any),
+      });
     }
-
-    // Else user is ADDING new item
     else this.todos.add({
-      dateAdded: new Date().toISOString(),
+      created: Timestamp(),
       history: [],
       reminders: [],
       ...data,
